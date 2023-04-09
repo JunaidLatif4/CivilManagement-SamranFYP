@@ -12,7 +12,7 @@ const LoginAPI = async ({ email, password }) => {
 
     try {
         let res = await axios({
-            url: "/login",
+            url: "/auth/login",
             method: "POST",
             data: {
                 email,
@@ -30,7 +30,7 @@ const LoginAPI = async ({ email, password }) => {
     return resolved;
 }
 
-const RegisterAPI = async ({ firstName, lastName, email, phone, type, password, password_confirmation }) => {
+const RegisterAPI = async ({ firstName, lastName, email, phone, role, password }) => {
     let resolved = {
         error: null,
         data: null
@@ -38,16 +38,15 @@ const RegisterAPI = async ({ firstName, lastName, email, phone, type, password, 
 
     try {
         let res = await axios({
-            url: "/register",
+            url: "/auth/signup",
             method: "POST",
             data: {
                 firstName,
                 lastName,
                 email,
                 phone,
-                type,
+                role,
                 password,
-                password_confirmation
             }
         })
         resolved.data = res.data

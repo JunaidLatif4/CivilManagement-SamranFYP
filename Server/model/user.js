@@ -21,18 +21,8 @@ const userSchema = new mongoose.Schema({
         required: [true, "Email is required"],
         validate: [validator.isEmail, "Invalid Email"],
     },
-    dateOfBirth: {
-        type: Date,
-    },
     phone: {
         type: String,
-    },
-    gender: {
-        type: String,
-        enum: {
-            values: ["male", "female", "Male", "Female", "other", "Other"],
-            message: "Gender must be male, female or other",
-        },
     },
     address: {
         type: String,
@@ -80,10 +70,12 @@ const userSchema = new mongoose.Schema({
             values: [
                 "superadmin",
                 "admin",
-                "customer",
+                "client",
+                "contractor",
+                "engineer"
             ],
             message:
-                "Role Must be superadmin, admin or customer",
+                "Role Must be superadmin, admin or client , contractor , engineer",
         },
         required: [true, "Role is required"],
     },
@@ -126,19 +118,19 @@ userSchema.methods.createEmailVerifyToken = async function () {
 userSchema.methods.createPhoneVerifyToken = async function () {
     let token;
     do {
-      token = Math.floor(100000 + Math.random() * 900000).toString();
+        token = Math.floor(100000 + Math.random() * 900000).toString();
     } while (
-      await User.findOne({
-        phoneVerificationCode: crypto
-          .createHash("sha256")
-          .update(token)
-          .digest("hex"),
-      })
+        await User.findOne({
+            phoneVerificationCode: crypto
+                .createHash("sha256")
+                .update(token)
+                .digest("hex"),
+        })
     );
     this.phoneVerificationCode = crypto
-      .createHash("sha256")
-      .update(token)
-      .digest("hex");
+        .createHash("sha256")
+        .update(token)
+        .digest("hex");
     this.phoneVerificationTokenExpires = Date.now() + 10 * 60 * 1000;
     return token;
 };

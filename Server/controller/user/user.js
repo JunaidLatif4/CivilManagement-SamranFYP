@@ -4,7 +4,7 @@ const userModel = require("../../model/user");
 const bycrypt = require("../../utils/bycrypt");
 const saveFileToPublic = require("../../utils/saveFileToPublic");
 const catchAsync = require("../../utils/catchAsync");
-const { uploadFile } = require("../../utils/s3Uploader")
+// const { uploadFile } = require("../../utils/s3Uploader")
 
 exports.approve = catchAsync(async (req, res, next) => {
     try {
@@ -98,7 +98,7 @@ exports.updateAccount = catchAsync(async (req, res) => {
         if (firstName) data.firstName = firstName;
         if (lastName) data.lastName = lastName;
         if (req.file) {
-            data.profileImage = await uploadFile(req.file);
+            // data.profileImage = await uploadFile(req.file);
         }
         if (password) {
             const hashPassword = await bycrypt.hashPassword(password);

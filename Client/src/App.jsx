@@ -27,7 +27,7 @@ const ProtectedRoute = ({ user, children }) => {
 };
 const App = () => {
 
-  let token = localStorage.getItem("madrasaToken")
+  let token = localStorage.getItem("civilToken")
   let AuthToken = token ?? null
 
   return (

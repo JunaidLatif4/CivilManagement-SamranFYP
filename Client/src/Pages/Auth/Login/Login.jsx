@@ -56,9 +56,9 @@ const Login = () => {
         } else {
             toast.success(res.data.message);
             Dispatch(userDataActions.setUserData(res?.data?.data))
-            let token = res?.data?.data?.token?.plainTextToken
-            localStorage.setItem("madrasaToken", token)
-            localStorage.setItem("madrasaUserData", JSON.stringify(res?.data?.data))
+            let token = res?.data?.data?.token
+            localStorage.setItem("civilToken", token)
+            localStorage.setItem("civilUserData", JSON.stringify(res?.data?.data))
             setTimeout(() => {
                 window.location.href = "/"
             }, 500);
