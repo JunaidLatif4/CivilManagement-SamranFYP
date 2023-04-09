@@ -1,0 +1,49 @@
+.dashboardHomeContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+
+    .heading {
+        font-size: 2rem;
+        font-weight: bold;
+        text-shadow: 1px 2px 5px rgba(81, 67, 21, 0.8);
+    }
+
+    .subHeading {
+        font-size: 1.2rem;
+        font-weight: bold;
+        text-shadow: 1px 1px 3px rgba(81, 67, 21, 0.8);
+    }
+
+    .reportBox {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 3rem;
+
+        @media screen and (max-width:1450px) {
+            .datePicker {
+                width: 250px !important;
+            }
+        }
+
+        @media screen and (max-width:1200px) {
+            grid-template-columns: 1fr;
+        }
+
+        .chartsBox,
+        .donutBox {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .charts,
+        .donuts {
+            padding: 1rem;
+            border-radius: .4rem;
+            box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
+            height: 300px;
+        }
+    }
+}

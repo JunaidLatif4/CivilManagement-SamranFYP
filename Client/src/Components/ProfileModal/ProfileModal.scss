@@ -1,0 +1,98 @@
+.close {
+    position: absolute;
+    right: 20px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    .icon{
+        fill: var(--themeColorGreen);
+    }
+}
+
+.profileContainer {
+    padding: 2rem 5rem;
+    padding-top: 2rem;
+
+    .wrapContainer {
+        display: flex;
+        flex-direction: column;
+        gap: 3rem;
+    }
+
+    .flexFields {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+
+        .imgBox {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            padding: .3rem;
+            border-radius: 8px;
+
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                border-radius: 5px;
+            }
+        }
+
+    }
+
+    .registerInput {
+        width: 100%;
+        border: 1px solid var(--border);
+        padding: 12px 20px;
+        border-radius: var(--radius);
+
+        &:hover {
+            border-color: var(--themeColorGreen);
+        }
+    }
+
+    .fields {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .ant-space-vertical {
+        width: 100% !important;
+    }
+
+    .registerButton {
+        padding-top: .5rem;
+
+        .register {
+            max-height: 40px;
+            height: 40px;
+            width: 100%;
+            background: #00A859;
+            padding: 20px 35px;
+            color: #fff;
+            border-radius: var(--radius);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #00A859;
+
+        }
+
+        .anticon svg {
+            fill: #fff !important;
+        }
+
+        p {
+            padding-top: 1rem;
+            text-align: center;
+            font-size: 0.875rem;
+
+            a {
+                font-weight: bold;
+                color: var(--themeColorGreen);
+            }
+        }
+
+    }
+}

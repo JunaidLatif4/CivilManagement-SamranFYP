@@ -1,0 +1,87 @@
+.cardsContainer {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+
+    @media screen and (max-width:1450px) {
+        grid-template-columns: repeat(2, 1fr);
+
+    }
+
+    @media screen and (max-width:768px) {
+        grid-template-columns: repeat(1, 1fr);
+
+    }
+
+    .hoverEffect {
+        transition: .7s;
+        &:hover {
+            transform: scale(1.05);
+        }
+    }
+
+    .card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        border-radius: .3rem;
+        background-color: var(--lightYellow);
+        padding: 1rem;
+        box-shadow: 0px 0px 5px 0px rgba(128, 128, 128, 0.2);
+        cursor: pointer;
+
+
+
+        .bottomLine {
+            position: absolute;
+            bottom: -10px;
+            left: 10px;
+            right: 10px;
+            background-color: var(--lightYellow);
+            height: 40px;
+            z-index: -2;
+            border-radius: .3rem;
+            box-shadow: inherit;
+        }
+
+        .iconBox {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            .icon {
+                font-size: 1.5rem;
+            }
+
+            .counts {
+                display: flex;
+                gap: .2rem;
+                font-size: small;
+                justify-content: center;
+                align-items: center;
+                background-color: var(--themeColorGreen);
+                padding: .3rem .45rem;
+                border-radius: 1rem;
+                color: white;
+            }
+        }
+
+        .detials {
+            display: flex;
+            flex-direction: column;
+            gap: .3rem;
+
+            .value {
+                font-size: 1.3rem;
+                font-weight: bold;
+            }
+
+            .title {
+                color: gray;
+                font-size: small;
+            }
+        }
+
+    }
+}

@@ -1,0 +1,88 @@
+.dashboardContainer {
+    display: flex;
+    max-height: 100vh;
+
+    .sider {
+        height: 100vh;
+        display: grid;
+        grid-template-rows: auto 45px;
+        background-color: var(--lightYellow);
+        box-shadow: 0px 1px 8px 0px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+        transition: all .3s;
+
+        .ant-layout-sider-children {
+            display: flex;
+            flex-direction: column;
+
+
+            .logoBox {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 1.5rem 0;
+                opacity: 0;
+                height: 120px;
+
+                img {
+                    width: 100px;
+                    height: 100%;
+                    object-fit: contain;
+
+                }
+            }
+
+            .ant-menu-root {
+                height: calc(100vh - 178px);
+                background-color: inherit;
+                border: none;
+                overflow-y: scroll;
+
+
+
+
+                .ant-menu-item {
+                    &:hover {
+                        color: #000000;
+                    }
+                }
+
+                .ant-menu-item-selected {
+                    background-color: var(--themeColor);
+                    color: var(--themeColorGreen);
+
+
+                    &:hover {
+                        color: var(--themeColorGreen);
+                    }
+                }
+            }
+        }
+
+        .ant-layout-sider-trigger {
+            padding: .2rem .5rem;
+            cursor: pointer;
+            transition: all .3s;
+
+
+            .trig {
+                height: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                color: var(--themeColorGreen);
+                font-size: 1.2rem;
+                font-weight: bold;
+                box-sizing: border-box;
+                background-color: var(--themeColor);
+                border-radius: 8px;
+            }
+        }
+    }
+    .rightContainer {
+        width: 100%;
+        padding: 4rem 2rem;
+        padding-top: 7.5rem;
+        overflow-y: scroll;
+    }
+}
