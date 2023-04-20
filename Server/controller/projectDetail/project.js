@@ -5,7 +5,7 @@ const catchAsync = require("../../utils/catchAsync");
 
 exports.projectPost = catchAsync(async (req, res) => {
     const data = req.body
-    const newData = new project()
+    const newData = new project(data)
     try {
         await newData.save()
         console.log("Store Data SucccessFully")

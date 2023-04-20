@@ -6,13 +6,18 @@ const projectSchema = new mongoose.Schema({
         type : string,
         required : [true, "Project Title is Required"]
     },
-    decs : {
+    desription : {
         type : String,
         required : [true, " Project Description is Required"]
     },
     status : {
-        type : Boolean, 
-        default : false
+        type : String, 
+        enum : {
+            value : ["cancelled", "inprogress", "completed","active", "pending"],
+            message : "Status must be inprogress, active, completed or pending",
+            default : "inprogress",
+        }
+        // default : false
     },
     client : {
         type : mongoose.Schema.Types.ObjectId,
@@ -31,8 +36,6 @@ const projectSchema = new mongoose.Schema({
 },
 {
     timestamps : true,
-    toJSON : {virtuals:true},
-    toObject:{virtuals:true},
 }) 
 
 const projectModel = mongoose.model('projects',projectSchema)
