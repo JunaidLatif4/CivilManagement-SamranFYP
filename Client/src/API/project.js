@@ -7,7 +7,7 @@ import AuthTokenGen from "../Utils/AuthTokenGen"
 
 
 
-const GetAllBlogsAPI = async () => {
+const GetAllProjectsAPI = async () => {
     let resolved = {
         error: null,
         data: null
@@ -15,7 +15,7 @@ const GetAllBlogsAPI = async () => {
 
     try {
         let res = await axios({
-            url: "/blogs",
+            url: "/projects",
             method: "GET",
             headers: AuthTokenGen()
         })
@@ -55,4 +55,4 @@ const CreatBlogsAPI = async (formData) => {
 }
 
 
-export { GetAllBlogsAPI, CreatBlogsAPI };
+export { GetAllProjectsAPI, CreatBlogsAPI };
