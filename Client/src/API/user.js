@@ -29,6 +29,72 @@ const GetAllUsersAPI = async () => {
     }
     return resolved;
 }
+const GetAllClientsAPI = async () => {
+    let resolved = {
+        error: null,
+        data: null
+    }
+
+    try {
+        let res = await axios({
+            url: "/users/getAll/clients",
+            method: "GET",
+            headers: AuthTokenGen()
+        })
+        resolved.data = res.data
+    } catch (err) {
+        if (err && err.response && err?.response?.data?.message) {
+            resolved.error = err.response.data.message
+        } else {
+            resolved.error = "Something went Wrong"
+        }
+    }
+    return resolved;
+}
+const GetAllContractorsAPI = async () => {
+    let resolved = {
+        error: null,
+        data: null
+    }
+
+    try {
+        let res = await axios({
+            url: "/users/getAll/contractors",
+            method: "GET",
+            headers: AuthTokenGen()
+        })
+        resolved.data = res.data
+    } catch (err) {
+        if (err && err.response && err?.response?.data?.message) {
+            resolved.error = err.response.data.message
+        } else {
+            resolved.error = "Something went Wrong"
+        }
+    }
+    return resolved;
+}
+const GetAllEnginnersAPI = async () => {
+    let resolved = {
+        error: null,
+        data: null
+    }
+
+    try {
+        let res = await axios({
+            url: "/users/getAll/engineers",
+            method: "GET",
+            headers: AuthTokenGen()
+        })
+        resolved.data = res.data
+    } catch (err) {
+        if (err && err.response && err?.response?.data?.message) {
+            resolved.error = err.response.data.message
+        } else {
+            resolved.error = "Something went Wrong"
+        }
+    }
+    return resolved;
+}
 
 const CreateUserAPI = async (formData) => {
     let resolved = {
@@ -188,4 +254,4 @@ const GetAllPermissionsAPI = async () => {
 }
 
 
-export { GetAllUsersAPI, GetAllRolesAPI, CreateRoleAPI, UpdateRoleAPI, GetAllPermissionsAPI, CreateUserAPI, UpdateUserAPI };
+export { GetAllUsersAPI, GetAllRolesAPI, CreateRoleAPI, UpdateRoleAPI, GetAllPermissionsAPI, CreateUserAPI, UpdateUserAPI, GetAllClientsAPI, GetAllContractorsAPI, GetAllEnginnersAPI };

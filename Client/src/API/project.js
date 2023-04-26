@@ -15,7 +15,7 @@ const GetAllProjectsAPI = async () => {
 
     try {
         let res = await axios({
-            url: "/projects",
+            url: "/project",
             method: "GET",
             headers: AuthTokenGen()
         })
@@ -30,7 +30,7 @@ const GetAllProjectsAPI = async () => {
     return resolved;
 }
 
-const CreatBlogsAPI = async (formData) => {
+const CreatProjectAPI = async (formData) => {
     let resolved = {
         error: null,
         data: null
@@ -38,7 +38,7 @@ const CreatBlogsAPI = async (formData) => {
 
     try {
         let res = await axios({
-            url: "/blogs",
+            url: "/project",
             method: "POST",
             data: formData,
             headers: AuthTokenGen()
@@ -55,4 +55,4 @@ const CreatBlogsAPI = async (formData) => {
 }
 
 
-export { GetAllProjectsAPI, CreatBlogsAPI };
+export { GetAllProjectsAPI, CreatProjectAPI };

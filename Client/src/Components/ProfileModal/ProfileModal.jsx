@@ -174,24 +174,24 @@ const ProfileModal = ({ openModal, closeModal, selectedUser, isprofile }) => {
         }
     }, [selectedUser, openModal])
 
-    const gettingAllRoles = async () => {
-        let res = await GetAllRolesAPI()
-        if (res.error != null) {
-            toast.error(res.error);
-        } else {
-            let rolesData = res?.data?.data || null
-            let process = rolesData?.roles?.map((role) => {
-                return {
-                    label: role?.name,
-                    value: role?.id
-                }
-            })
-            await Promise.all(process)
-            setAllRoles(process)
-        }
-    }
+    // const gettingAllRoles = async () => {
+    //     let res = await GetAllRolesAPI()
+    //     if (res.error != null) {
+    //         toast.error(res.error);
+    //     } else {
+    //         let rolesData = res?.data?.data || null
+    //         let process = rolesData?.roles?.map((role) => {
+    //             return {
+    //                 label: role?.name,
+    //                 value: role?.id
+    //             }
+    //         })
+    //         await Promise.all(process)
+    //         setAllRoles(process)
+    //     }
+    // }
     useEffect(() => {
-        gettingAllRoles()
+        // gettingAllRoles()
     }, [])
     return (
         <>

@@ -4,4 +4,5 @@ module.exports = {
   USER: `/${version}/users`,
   ADMIN: `/${version}/admin`,
   MODEL: `/${version}/model`,
+  PROJECT: `/${version}/project`,
 };

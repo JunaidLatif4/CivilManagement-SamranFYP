@@ -174,3 +174,33 @@ exports.getAll = catchAsync(async (req, res) => {
         res.status(STATUS_CODE.SERVER_ERROR).json({ statusCode: STATUS_CODE.SERVER_ERROR });
     }
 })
+
+exports.getAllClients = catchAsync(async (req, res) => {
+    try {
+        const result = await userModel.find({ role: roles.CLIENT }).select("firstName lastName email _id")
+        res.status(STATUS_CODE.OK).json({ result, statusCode: STATUS_CODE.OK });
+    } catch (err) {
+        console.log(err);
+        res.status(STATUS_CODE.SERVER_ERROR).json({ statusCode: STATUS_CODE.SERVER_ERROR });
+    }
+})
+
+exports.getAllContractors = catchAsync(async (req, res) => {
+    try {
+        const result = await userModel.find({ role: roles.CONTRACTOR }).select("firstName lastName email _id")
+        res.status(STATUS_CODE.OK).json({ result, statusCode: STATUS_CODE.OK });
+    } catch (err) {
+        console.log(err);
+        res.status(STATUS_CODE.SERVER_ERROR).json({ statusCode: STATUS_CODE.SERVER_ERROR });
+    }
+})
+
+exports.getAllEngineers = catchAsync(async (req, res) => {
+    try {
+        const result = await userModel.find({ role: roles.ENGINEER }).select("firstName lastName email _id")
+        res.status(STATUS_CODE.OK).json({ result, statusCode: STATUS_CODE.OK });
+    } catch (err) {
+        console.log(err);
+        res.status(STATUS_CODE.SERVER_ERROR).json({ statusCode: STATUS_CODE.SERVER_ERROR });
+    }
+})

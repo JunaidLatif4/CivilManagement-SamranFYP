@@ -1,5 +1,5 @@
 const useToken = () => {
-    let token = localStorage.getItem("madrasaToken")
+    let token = localStorage.getItem("civilToken")
     let AuthToken = token ?? null
 
     return {
