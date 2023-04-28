@@ -96,7 +96,7 @@ const Table = ({
     return (
         <div className="custom-table">
             <Row align="middle" justify="start">
-                <Col xs={24} sm={24} md={24} lg={24} xl={descreaseRightActionWidth ? 12: 8}>
+                <Col xs={24} sm={24} md={24} lg={24} xl={descreaseRightActionWidth ? 12 : 8}>
                     <Row align="middle">
                         {
                             tableLeftActions?.map((el, i) => (
