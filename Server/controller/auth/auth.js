@@ -8,7 +8,7 @@ const catchAsync = require("../../utils/catchAsync");
 
 exports.login = catchAsync(async (req, res)=>{
     try{
-
+        console.log("hit")
         let email = req.body.email, 
         password = req.body.password;
         if(!email || !password){

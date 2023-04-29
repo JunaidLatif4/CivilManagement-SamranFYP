@@ -81,8 +81,8 @@ const Table = ({
             title: 'Action', key: 'action',
             render: (_, record) => (
                 <div>
-                    <button className="btn" onClick={() => HandleAction({ record, type: "edit" })}>
-                        <FaEdit style={{ color: "skyblue" }} size={20} />
+                    <button className="btn" onClick={() => HandleAction({ record, type: "edit" }, console.log("button Clicked"))}>
+                        <FaEdit style={{ color: "skyblue" }} size={40} />
                     </button>
                     &nbsp;
                     <button className="btn" onClick={() => HandleAction({ record, type: "delete" })}>
