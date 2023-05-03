@@ -1,0 +1,70 @@
+.EditUserMainContainer {
+    width: 80%;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+
+    .form {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .profileBox {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 1rem;
+
+        .profile {
+            border: 1px solid gray;
+            border-radius: .3rem;
+
+            img {
+                width: 100%;
+                height: 200px;
+                object-fit: contain;
+            }
+
+            .details {
+                padding: .5rem;
+
+                .title {
+                    text-align: center;
+                    text-transform: uppercase;
+                }
+
+                .name {
+                    font-size: 1.1rem;
+                    font-weight: 500;
+                    font-style: italic;
+                    text-align: center;
+
+                }
+            }
+        }
+
+    }
+
+    .EditPageButtons {
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .EditPagebtn {
+        max-height: 40px;
+        height: 40px;
+        min-width: 20px;
+        width: 6rem;
+        background: var(--themeColorGreen);
+        // padding: 20px 35px;
+        color: #fff;
+        border-radius: var(--radius);
+        font-size: 14px;
+        // display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none !important;
+        margin-left: 10px;
+    }
+}

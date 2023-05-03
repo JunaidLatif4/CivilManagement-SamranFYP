@@ -11,6 +11,8 @@ import { MdDelete } from "react-icons/md";
 import Table from "./Component/table/Table"
 import AddNewProject from "./Component/AddProjectModal/NewProjectModal"
 import AllProject from "./Component/AllProjects/AllProjects"
+import ViewProjectPage from "./Component/ViewProject/ViewProjectPage"
+
 // API :
 import { GetAllProjectsAPI } from '../../../../API/project';
 // Helpers :
@@ -26,12 +28,19 @@ import "./Projects.scss";
 const Projects = () => {
 
     const [allProjects, setAllProjects] = useState([])
+    const [currentPage, setCurrentPage] = useState("all")
+    const [selectedProject, setSelectedProject] = useState(null)
 
 
     return (
         <>
             <div className="dashboardProjectContainer">
-                <AllProject allProjects={allProjects} setAllProjects={setAllProjects} />
+                {
+                    currentPage == "all" ?
+                        <AllProject allProjects={allProjects} setAllProjects={setAllProjects} currentPage={currentPage} setCurrentPage={setCurrentPage} selectedProject={selectedProject} setSelectedProject={setSelectedProject} />
+                        :
+                        <ViewProjectPage />
+                }
             </div>
         </>
     )

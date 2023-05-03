@@ -140,6 +140,12 @@ input {
     gap: 1rem;
 }
 
+.flexColumn {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
 // ProgressBox
 .progreesBox {
     width: 100%;

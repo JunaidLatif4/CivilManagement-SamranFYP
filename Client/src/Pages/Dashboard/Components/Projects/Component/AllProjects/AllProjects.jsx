@@ -22,13 +22,18 @@ import "./AllProjects.scss";
 
 
 
-const Projects = ({allProjects , setAllProjects  }) => {
+const Projects = ({ allProjects, setAllProjects, currentPage, setCurrentPage, selectedProject, setSelectedProject }) => {
 
     const [showAddProjectModal, setShowAddProjectModal] = useState(false)
 
     const [loading, setLoading] = useState(false)
     const [reload, setReload] = useState(false)
 
+
+    const viewProject = (data) => {
+        setSelectedProject(data)
+        setCurrentPage("view")
+    }
 
     const closeModal = () => {
         setShowAddProjectModal(false)
@@ -79,7 +84,7 @@ const Projects = ({allProjects , setAllProjects  }) => {
             align: "center",
             render: (_, data) => <>
                 <div className="actionBox">
-                    <div className="actionBtn">
+                    <div className="actionBtn" onClick={() => viewProject(data)}>
                         <GrView className='icon cursor' />
                     </div>
                     <div className="actionBtn">

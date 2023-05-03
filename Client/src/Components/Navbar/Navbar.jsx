@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 import Fade from 'react-reveal/Fade';
 
 // ANT-D | MUI :
@@ -35,10 +36,19 @@ const logout = () => {
 }
 
 const Navbar = () => {
-
+    const Navigate = useNavigate()
     const UserData = useSelector(state => state.userData)
 
     const [showProfileModal, setShowProfileModal] = useState(false)
+
+
+    const closeModal = (isReload) => {
+        if (isReload == true) {
+            Navigate(0)
+        } else {
+            setShowProfileModal(false)
+        }
+    }
 
 
     const content = (
@@ -46,19 +56,7 @@ const Navbar = () => {
             <div className="border"></div>
             <div className='popoverItem' onClick={() => setShowProfileModal(true)}>
                 <AiOutlineUser className='icon' />
-                <p>Create New User</p>
-            </div>
-            <div className='popoverItem'>
-                <AiFillSetting className='icon' />
-                Add Account
-            </div>
-            <div className='popoverItem'>
-                <AiFillSetting className='icon' />
-                Reset Password
-            </div>
-            <div className='popoverItem'>
-                <AiFillSetting className='icon' />
-                Help
+                <p>Profile</p>
             </div>
             <div className="border"></div>
             <div className='popoverItem' onClick={logout}>
@@ -94,34 +92,34 @@ const Navbar = () => {
                                 </div>
                             </Fade>
                             <Fade right>
-                            <div className="bio">
-                                <div className='inputfield'>
-                                    <input type="text" placeholder='Search...' />
-                                    <RiSearchLine className="icon" />
-                                </div>
-                                <div className='notification'>
-                                    <IoMdNotificationsOutline className='icon' />
-                                </div>
-                                <div className="nav-popover">
-                                    <Popover
-                                        placement="bottomRight" title={
-                                            <div className='popoverHeading'>
-                                                <div className='name'>{UserData?.firstName} {UserData?.lastName}</div>
-                                                <div className="skill" style={{ fontSize: "0.75rem" }}>{UserData?.type?.toLocaleUpperCase()}</div>
+                                <div className="bio">
+                                    <div className='inputfield'>
+                                        <input type="text" placeholder='Search...' />
+                                        <RiSearchLine className="icon" />
+                                    </div>
+                                    <div className='notification'>
+                                        <IoMdNotificationsOutline className='icon' />
+                                    </div>
+                                    <div className="nav-popover">
+                                        <Popover
+                                            placement="bottomRight" title={
+                                                <div className='popoverHeading'>
+                                                    <div className='name'>{UserData?.firstName} {UserData?.lastName}</div>
+                                                    <div className="skill" style={{ fontSize: "0.75rem" }}>{UserData?.type?.toLocaleUpperCase()}</div>
+                                                </div>
+                                            } content={content} trigger="click">
+                                            <div className='img'>
+                                                <img src={profile} alt="" />
                                             </div>
-                                        } content={content} trigger="click">
-                                        <div className='img'>
-                                            <img src={profile} alt="" />
-                                        </div>
-                                    </Popover>
+                                        </Popover>
+                                    </div>
                                 </div>
-                            </div>
                             </Fade>
                         </div>
                     </div>
                 </div>
             </div>
-            <ProfileModal openModal={showProfileModal} setOpenModal={setShowProfileModal} />
+            <ProfileModal openModal={showProfileModal} setOpenModal={setShowProfileModal} selectedUser={UserData} closeModal={closeModal} isprofile={true} />
         </>
     )
 }

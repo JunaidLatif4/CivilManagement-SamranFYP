@@ -7,6 +7,11 @@ import Dashboard from './Pages/Dashboard/Dashboard';
 import Login from './Pages/Auth/Login/Login';
 import Register from './Pages/Auth/Register/Register';
 
+// API :
+import { GetProfileAPI } from "API/user"
+// Redux :
+import { useDispatch } from "react-redux";
+import { userDataActions } from "Redux/Slice/userData"
 // Helpers :
 import { ToastContainer } from "react-toastify";
 
@@ -26,9 +31,26 @@ const ProtectedRoute = ({ user, children }) => {
   return children;
 };
 const App = () => {
-
+  const Dispatch = useDispatch()
   let token = localStorage.getItem("civilToken")
   let AuthToken = token ?? null
+
+  const gettingProfileData = async () => {
+    let res = await GetProfileAPI()
+    if (res.error != null) {
+
+    } else {
+      console.log("------------- PROFILE -------------", res);
+      let userData = res.data.result
+      userData.token = AuthToken
+      Dispatch(userDataActions.setUserData(userData))
+      localStorage.setItem("civilUserData", JSON.stringify(userData))
+
+    }
+  }
+  if (AuthToken) {
+    gettingProfileData()
+  }
 
   return (
     <>

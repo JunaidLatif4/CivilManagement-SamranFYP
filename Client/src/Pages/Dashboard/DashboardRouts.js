@@ -11,7 +11,7 @@ import { AiOutlineFundProjectionScreen } from "react-icons/ai";
 import Home from "./Components/Home/Home";
 import User from "./Components/Users/User";
 import Projects from "./Components/Projects/Projects";
-import EditProjectPage from "./Components/Projects/Component/EditProject/EditProjectPage";
+import ViewProjectPage from "./Components/Projects/Component/ViewProject/ViewProjectPage";
 
 
 
@@ -29,7 +29,7 @@ const routsList = [
     getSideBarData({ label: 'Dashboard', key: '/', icon: <MdDashboard />, element: <Home /> }),
     getSideBarData({ label: 'Users', key: '/users', icon: <FiUsers />, element: <User /> }),
     getSideBarData({ label: 'Projects', key: '/project', icon: <AiOutlineFundProjectionScreen />, element: <Projects /> }),
-    getSideBarData({ label: 'EditProject', key: '/editproject', icon: <AiOutlineFundProjectionScreen />, element: <EditProjectPage /> }),
+    getSideBarData({ label: 'EditProject', key: '/editproject', icon: <AiOutlineFundProjectionScreen />, element: <ViewProjectPage /> }),
     // getSideBarData({ label: 'Blogs', key: '/blogs', icon: <SiBloglovin />, element: <Blogs /> }),
     // getSideBarData('Team', 'sub2', <TeamOutlined />, [getSideBarData('Team 1', '6'), getSideBarData('Team 2', '8')]),
 ];

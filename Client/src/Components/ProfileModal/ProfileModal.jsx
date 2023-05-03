@@ -10,7 +10,7 @@ import { AiFillCloseCircle } from "react-icons/ai"
 import { PlusOutlined, LoadingOutlined } from '@ant-design/icons';
 import { ReactComponent as Down } from '../../Assets/Post/down.svg'
 // API:
-import { GetAllRolesAPI, CreateUserAPI, UpdateUserAPI } from '../../API/user';
+import { GetAllRolesAPI, CreateUserAPI, UpdateUserAPI, UpdateProfileAPI } from '../../API/user';
 // Helpers :
 import { toast } from 'react-toastify';
 
@@ -59,17 +59,16 @@ const beforeUpload = (file) => {
 };
 const ProfileModal = ({ openModal, closeModal, selectedUser, isprofile }) => {
 
-    const [allRoles, setAllRoles] = useState([])
+    const [allRoles, setAllRoles] = useState([{ label: "Client", value: "client" }, { label: "Contractor", value: "contractor" }, { label: "Engineer", value: "engineer" }])
     const [formData, setFormData] = useState({
         firstName: "",
         lastName: "",
         email: "",
         phone: "",
-        roles: undefined,
+        role: undefined,
         password: "",
         confirmPassword: ""
     });
-    const [selectedRole, setSelectedRole] = useState(null)
     const [loading, setloading] = useState(false);
 
     const [imageUrl, setImageUrl] = useState(null);
@@ -85,9 +84,8 @@ const ProfileModal = ({ openModal, closeModal, selectedUser, isprofile }) => {
     const handleSelectChange = (value) => {
         setFormData({
             ...formData,
-            roles: value
+            role: value
         })
-        setSelectedRole(value)
     };
     const handleUploadChange = (info) => {
         getBase64(info.file.originFileObj, (url) => {
@@ -114,25 +112,35 @@ const ProfileModal = ({ openModal, closeModal, selectedUser, isprofile }) => {
     const handleRegister = async () => {
         setloading(true)
 
+
+        if (formData.password) {
+            if (formData.password <= 7) {
+                toast.error("Password Must more than 7 characters")
+                setloading(false)
+                return
+            } else if (formData.password != formData.confirmPassword) {
+                toast.error("Confirm Password doesn't match")
+                setloading(false)
+                return
+            }
+        }
+
+        let fData = new FormData()
+        Object.keys(formData).map((key) => {
+            if (key == "role") {
+                fData.append(key, formData[key]?.value)
+            } else {
+                fData.append(key, formData[key])
+            }
+        })
+        if (file) {
+            fData("file", file)
+        }
+
         let res
         if (selectedUser) {
-            res = await UpdateUserAPI({
-                id: selectedUser?.id,
-                firstName: formData.firstName,
-                lastName: formData.lastName,
-                phone: formData.phone,
-                password: formData.password,
-                password_confirmation: formData.confirmPassword,
-                roles: formData.roles
-            })
+            res = await UpdateProfileAPI(fData)
         } else {
-            let fData = new FormData()
-            Object.keys(formData).map((key) => {
-                fData.append(key, formData[key])
-            })
-            fData.append("avatar", file)
-            fData.append("type", "0")
-
             res = await CreateUserAPI(fData)
         }
 
@@ -141,31 +149,30 @@ const ProfileModal = ({ openModal, closeModal, selectedUser, isprofile }) => {
         } else {
             toast.success(res.data.message);
         }
-        closeModal()
+        closeModal(true)
         setloading(false)
     }
 
     useEffect(() => {
         if (selectedUser) {
+            const filterRole = allRoles.find(val => val.value == selectedUser?.role)
             setFormData({
                 firstName: selectedUser?.firstName,
                 lastName: selectedUser?.lastName,
                 email: selectedUser?.email,
                 phone: selectedUser?.phone,
-                type: selectedUser?.type,
-                roles: selectedUser?.roles[0]?.id,
+                role: filterRole ?? null,
             })
-            setSelectedRole(selectedUser?.roles[0]?.id)
 
             setFile(null)
-            setImageUrl(null)
+            setImageUrl(selectedUser?.profileImage || null)
         } else {
             setFormData({
                 firstName: "",
                 lastName: "",
                 email: "",
                 phone: "",
-                roles: undefined,
+                role: undefined,
                 password: "",
                 confirmPassword: ""
             })
@@ -174,25 +181,7 @@ const ProfileModal = ({ openModal, closeModal, selectedUser, isprofile }) => {
         }
     }, [selectedUser, openModal])
 
-    // const gettingAllRoles = async () => {
-    //     let res = await GetAllRolesAPI()
-    //     if (res.error != null) {
-    //         toast.error(res.error);
-    //     } else {
-    //         let rolesData = res?.data?.data || null
-    //         let process = rolesData?.roles?.map((role) => {
-    //             return {
-    //                 label: role?.name,
-    //                 value: role?.id
-    //             }
-    //         })
-    //         await Promise.all(process)
-    //         setAllRoles(process)
-    //     }
-    // }
-    useEffect(() => {
-        // gettingAllRoles()
-    }, [])
+
     return (
         <>
             <Modal
@@ -209,7 +198,7 @@ const ProfileModal = ({ openModal, closeModal, selectedUser, isprofile }) => {
                                 <div className="heading">{isprofile ? "Edit Profile" : selectedUser ? "Edit User" : "Create User"} </div>
                                 <div className="flexFields">
                                     {
-                                        !selectedUser &&
+                                        selectedUser &&
                                         <Upload
                                             listType="picture-card"
                                             className="avatar-uploader"
@@ -233,17 +222,17 @@ const ProfileModal = ({ openModal, closeModal, selectedUser, isprofile }) => {
                                         </Upload>
                                     }
                                     <div className="fields">
-                                        <input className='registerInput' type="text" placeholder='First Name' name="firstName" onChange={enteringFormData} value={formData?.firstName} />
-                                        <input className='registerInput' type="text" placeholder='Last Name' name="lastName" onChange={enteringFormData} value={formData?.lastName} />
+                                        <Input className='registerInput' type="text" placeholder='First Name' name="firstName" onChange={enteringFormData} value={formData?.firstName} />
+                                        <Input className='registerInput' type="text" placeholder='Last Name' name="lastName" onChange={enteringFormData} value={formData?.lastName} />
                                     </div>
-                                    <input className='registerInput' type="email" placeholder='Email' name="email" onChange={enteringFormData} value={formData?.email} disabled={selectedUser ? true : false} />
-                                    <input className='registerInput' type="text" placeholder='Phone Number' name="phone" onChange={enteringFormData} value={formData?.phone} />
+                                    <Input className='registerInput' type="email" placeholder='Email' name="email" onChange={enteringFormData} value={formData?.email} disabled={selectedUser ? true : false} />
+                                    <Input className='registerInput' type="text" placeholder='Phone Number' name="phone" onChange={enteringFormData} value={formData?.phone} />
                                     {!isprofile && selectedUser && <input className='registerInput' type="text" placeholder='Type' name="type" onChange={enteringFormData} value={formData?.type} disabled={selectedUser ? true : false} />}
                                     <div className="fields">
                                         <Select
                                             disabled={isprofile ? true : false}
                                             onChange={handleSelectChange}
-                                            value={selectedRole}
+                                            value={formData.role}
                                             dropdownStyle={{ zIndex: "5000" }}
                                             placeholder="Select Role"
                                             options={allRoles}

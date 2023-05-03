@@ -1,10 +1,10 @@
 const roles = require("../../constants/roles");
-const STATUS_CODE = require("../../constants/statusCode");
+const { STATUS_CODE, SUCCESS_MSG } = require("../../constants/index");
 const userModel = require("../../model/user");
 const bycrypt = require("../../utils/bycrypt");
 const saveFileToPublic = require("../../utils/saveFileToPublic");
 const catchAsync = require("../../utils/catchAsync");
-// const { uploadFile } = require("../../utils/s3Uploader")
+const { uploadFile } = require("../../utils/uploader")
 
 exports.approve = catchAsync(async (req, res, next) => {
     try {
@@ -66,6 +66,16 @@ exports.ban = catchAsync(async (req, res) => {
     }
 })
 
+exports.getProfile = catchAsync(async (req, res) => {
+    try {
+        let currentUser = req.user;
+        res.status(STATUS_CODE.OK).json({ message: SUCCESS_MSG.SUCCESS_MESSAGES.OPERATION_SUCCESSFULL, result: currentUser });
+    } catch (err) {
+        console.log(err);
+        res.status(STATUS_CODE.SERVER_ERROR).json({ statusCode: STATUS_CODE.SERVER_ERROR }); s
+    }
+})
+
 exports.getById = catchAsync(async (req, res) => {
     try {
         let _id = req.params.id;
@@ -88,47 +98,35 @@ exports.getById = catchAsync(async (req, res) => {
 })
 
 exports.updateAccount = catchAsync(async (req, res) => {
-    try {
-        let firstName = req.body.firstName;
-        let lastName = req.body.lastName;
-        let password = req.body.password;
-        // let directoryPath = 
 
-        let data = {};
-        if (firstName) data.firstName = firstName;
-        if (lastName) data.lastName = lastName;
+    console.log("------->", req.body);
+
+    try {
+
+        let currentUser = req.user;
+        console.log("*******>", currentUser);
+
         if (req.file) {
-            // data.profileImage = await uploadFile(req.file);
+            req.body.profileImage = await uploadFile(req.file, currentUser?.profileImage?.url || null);
         }
-        if (password) {
-            const hashPassword = await bycrypt.hashPassword(password);
+        if (req.body.password) {
+            const hashPassword = await bycrypt.hashPassword(req.body.password);
             if (hashPassword) {
-                data.password = hashPassword;
+                req.body.password = hashPassword;
             } else {
-                res.status(STATUS_CODE.SERVER_ERROR).json({ message: `Unable to hash password`, statusCode: STATUS_CODE.SERVER_ERROR });
+                res.status(STATUS_CODE.SERVER_ERROR).json({ message: `Unable to hash password` });
                 return;
             }
         }
 
-        if (Object.entries(data).length === 0) {
-            res.status(STATUS_CODE.BAD_REQUEST).json({ message: `Please provide some data to modify`, statusCode: STATUS_CODE.BAD_REQUEST });
-            return;
-        }
+        let result = await userModel.findOneAndUpdate({ _id: req.user._id }, req.body, { returnOriginal: false });
 
-        let docs = await userModel.findOneAndUpdate({ _id: req.user._id }, {
-            $set: data,
-        }, { returnOriginal: false });
-
-        if (docs.isModified) {
-            res.status(STATUS_CODE.OK).json({ message: `Profile updated successfully`, statusCode: STATUS_CODE.OK, data: docs });
+        if (result.isModified) {
+            res.status(STATUS_CODE.OK).json({ message: `Profile updated successfully`, result: result });
             return;
         }
 
         res.status(STATUS_CODE.BAD_REQUEST).json({ message: `Profile updatetion failed`, statusCode: STATUS_CODE.BAD_REQUEST });
-        return;
-
-
-
     } catch (err) {
         console.log(err)
         res.status(STATUS_CODE.SERVER_ERROR).json({ message: `Server error occur`, statusCode: STATUS_CODE.SERVER_ERROR });

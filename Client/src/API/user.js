@@ -120,7 +120,54 @@ const CreateUserAPI = async (formData) => {
     return resolved;
 }
 
-const UpdateUserAPI = async ({ id, firstName, lastName, phone, password, password_confirmation, roles }) => {
+const GetProfileAPI = async () => {
+    let resolved = {
+        error: null,
+        data: null
+    }
+
+    try {
+        let res = await axios({
+            url: `/users`,
+            method: "GET",
+            headers: AuthTokenGen()
+        })
+        resolved.data = res.data
+    } catch (err) {
+        if (err && err.response && err?.response?.data?.message) {
+            resolved.error = err.response.data.message
+        } else {
+            resolved.error = "Something went Wrong"
+        }
+    }
+    return resolved;
+}
+
+const UpdateProfileAPI = async (data) => {
+    let resolved = {
+        error: null,
+        data: null
+    }
+
+    try {
+        let res = await axios({
+            url: `/users`,
+            method: "PATCH",
+            data,
+            headers: AuthTokenGen()
+        })
+        resolved.data = res.data
+    } catch (err) {
+        if (err && err.response && err?.response?.data?.message) {
+            resolved.error = err.response.data.message
+        } else {
+            resolved.error = "Something went Wrong"
+        }
+    }
+    return resolved;
+}
+
+const UpdateUserAPI = async ({ id, data }) => {
     let resolved = {
         error: null,
         data: null
@@ -129,15 +176,8 @@ const UpdateUserAPI = async ({ id, firstName, lastName, phone, password, passwor
     try {
         let res = await axios({
             url: `/users/${id}`,
-            method: "PUT",
-            data: {
-                firstName,
-                lastName,
-                phone,
-                roles: [roles],
-                password,
-                password_confirmation
-            },
+            method: "PATCH",
+            data,
             headers: AuthTokenGen()
         })
         resolved.data = res.data
@@ -254,4 +294,4 @@ const GetAllPermissionsAPI = async () => {
 }
 
 
-export { GetAllUsersAPI, GetAllRolesAPI, CreateRoleAPI, UpdateRoleAPI, GetAllPermissionsAPI, CreateUserAPI, UpdateUserAPI, GetAllClientsAPI, GetAllContractorsAPI, GetAllEnginnersAPI };
+export { GetAllUsersAPI, GetAllRolesAPI, CreateRoleAPI, GetProfileAPI, UpdateRoleAPI, GetAllPermissionsAPI, CreateUserAPI, UpdateProfileAPI, UpdateUserAPI, GetAllClientsAPI, GetAllContractorsAPI, GetAllEnginnersAPI };

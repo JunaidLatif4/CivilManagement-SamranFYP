@@ -12,8 +12,11 @@ const multer = require("../../utils/multer");
 
 router.use(auth.authenticate);
 
+router.route("/")
+    .get(user.getProfile)
+    .patch(multer.single("file"), user.updateAccount)
+
 router.get("/user/:id", user.getById);
-router.patch("/", multer.single("profileImage"), user.updateAccount);
 router.patch("/approve/:id", auth.restrictTo([roles.SUPERADMIN]), user.approve);
 router.patch("/ban/:id", auth.restrictTo([roles.SUPERADMIN]), user.ban);
 router.get("/getAll", auth.restrictTo([roles.ADMIN, roles.SUPERADMIN]), user.getAll);
