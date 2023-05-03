@@ -31,6 +31,7 @@ const Projects = ({ allProjects, setAllProjects, currentPage, setCurrentPage, se
 
 
     const viewProject = (data) => {
+        console.log("*****************", data);
         setSelectedProject(data)
         setCurrentPage("view")
     }

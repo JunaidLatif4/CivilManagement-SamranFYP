@@ -4,11 +4,11 @@ const s3Uploader = require("./s3Uploader")
 
 
 let Platform = process.env?.UPLOADER_PLATFORM || "local"
-const uploadFile = (file, prevName) => {
+const uploadFile = (...props) => {
     if (Platform == "aws_s3") {
-        return s3Uploader.uploadFile
+        return s3Uploader.uploadFile(...props)
     } else {
-        return localUploader.uploadFile
+        return localUploader.uploadFile(...props)
     }
 }
 

@@ -41,7 +41,7 @@ const Navbar = () => {
 
     const [showProfileModal, setShowProfileModal] = useState(false)
 
-
+    console.log("----------->", window.location);
     const closeModal = (isReload) => {
         if (isReload == true) {
             Navigate(0)
@@ -109,7 +109,7 @@ const Navbar = () => {
                                                 </div>
                                             } content={content} trigger="click">
                                             <div className='img'>
-                                                <img src={profile} alt="" />
+                                                <img src={UserData?.profileImage?.url ? `${window.location?.customURL}/${UserData?.profileImage?.url}` : profile} alt="" />
                                             </div>
                                         </Popover>
                                     </div>

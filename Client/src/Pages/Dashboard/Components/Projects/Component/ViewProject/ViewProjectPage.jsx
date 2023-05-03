@@ -14,6 +14,7 @@ import "./ViewProjectPage.scss";
 
 const { TextArea } = Input;
 export default function ViewProjectPage({ selectedProject }) {
+  console.log("--------->", selectedProject);
   return (
     <>
       <div className="EditUserMainContainer">
@@ -32,21 +33,21 @@ export default function ViewProjectPage({ selectedProject }) {
               <img src={NoImage} alt="ERROR" />
               <div className="details">
                 <h3 className="title">Client</h3>
-                <div className="name">Name</div>
+                <div className="name">{`${selectedProject?.client?.firstName} ${selectedProject?.client?.lastName}`}</div>
               </div>
             </div>
             <div className="profile">
               <img src={NoImage} alt="ERROR" />
               <div className="details">
                 <h3 className="title">Contractor</h3>
-                <div className="name">Name</div>
+                <div className="name">{`${selectedProject?.contractor?.firstName} ${selectedProject?.contractor?.lastName}`}</div>
               </div>
             </div>
             <div className="profile">
               <img src={NoImage} alt="ERROR" />
               <div className="details">
                 <h3 className="title">Engineer</h3>
-                <div className="name">Name</div>
+                <div className="name">{`${selectedProject?.engineer?.firstName} ${selectedProject?.engineer?.lastName}`}</div>
               </div>
             </div>
           </div>

@@ -39,7 +39,7 @@ const Projects = () => {
                     currentPage == "all" ?
                         <AllProject allProjects={allProjects} setAllProjects={setAllProjects} currentPage={currentPage} setCurrentPage={setCurrentPage} selectedProject={selectedProject} setSelectedProject={setSelectedProject} />
                         :
-                        <ViewProjectPage />
+                        <ViewProjectPage selectedProject={selectedProject} />
                 }
             </div>
         </>

@@ -134,7 +134,7 @@ const ProfileModal = ({ openModal, closeModal, selectedUser, isprofile }) => {
             }
         })
         if (file) {
-            fData("file", file)
+            fData.append("file", file)
         }
 
         let res
@@ -165,7 +165,7 @@ const ProfileModal = ({ openModal, closeModal, selectedUser, isprofile }) => {
             })
 
             setFile(null)
-            setImageUrl(selectedUser?.profileImage || null)
+            setImageUrl(`${window.location?.customURL}/${selectedUser?.profileImage?.url}` || null)
         } else {
             setFormData({
                 firstName: "",
