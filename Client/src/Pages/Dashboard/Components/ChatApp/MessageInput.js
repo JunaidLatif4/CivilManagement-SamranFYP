@@ -1,31 +1,32 @@
 import React from "react";
-import {
-  Grid,
-  IconButton,
-  TextField,
-  Tooltip,
-  CircularProgress,
-} from "@mui/material";
-import SendIcon from "@mui/icons-material/Send";
-import AttachmentTwoToneIcon from "@mui/icons-material/AttachmentTwoTone";
-import { toast } from "react-toastify";
-import { useUserContext } from "../../context/userContext";
-import { isEmpty } from "../../helpers/isEmpty";
 
-import { createMessage, webNotification } from "../../api/chat";
+// MUI | ANT-D :
+import { Grid, IconButton, TextField, Tooltip, CircularProgress, } from "@mui/material";
+import AttachmentTwoToneIcon from "@mui/icons-material/AttachmentTwoTone";
+import SendIcon from "@mui/icons-material/Send";
+
+// APIs :
+import { CreateMessageAPI } from "API/chat";
+// import { createMessage, webNotification } from "API/chat";
+// Redux :
+import { useSelector } from "react-redux";
+// Helpers :
+import { toast } from "react-toastify";
+
+// CSS :
 import styles from "./style";
 
 
-const MessageInput = ({
-  selectedChannel,
-  selectedChat,
-  setMessages,
-  setScrollToBottom,
-}) => {
-  const { userData } = useUserContext();
-  const hiddenFileInput = React.useRef(null);
+
+
+
+const MessageInput = ({ selectedChannel, selectedChat, setMessages, setScrollToBottom }) => {
+
+  const UserData = useSelector(state => state?.userData);
+
   const [message, setMessage] = React.useState("");
   const [fileLoading, setFileLoading] = React.useState(false);
+  const hiddenFileInput = React.useRef(null);
 
   const handleOnSend = async () => {
     if (!message) {
@@ -40,10 +41,10 @@ const MessageInput = ({
         type: "text",
         receiver_id: selectedChat?._id,
       };
-      const payloadMsg = { ...payload, sender_id: userData?._id, _id: ID };
+      const payloadMsg = { ...payload, sender_id: UserData?._id, _id: ID };
       setMessages((prev) => [...prev, payloadMsg]);
       setScrollToBottom(true);
-      const { data } = await createMessage(payload);
+      const { data } = await CreateMessageAPI(payload);
 
       setScrollToBottom(false);
       setMessages((prev) => {
@@ -54,16 +55,16 @@ const MessageInput = ({
       });
 
 
-      const notificationPayload = {
-        channel_id: selectedChannel?._id,
-        notification: "message",
-        method: "phone",
-        user_name: userData?.fullName,
-        // email: selectedChat?.email,
-        // from: userData?.phoneNumber,
-        to: selectedChat?.phoneNumber,
-      };
-      await webNotification(notificationPayload);
+      // const notificationPayload = {
+      //   channel_id: selectedChannel?._id,
+      //   notification: "message",
+      //   method: "phone",
+      //   user_name: UserData?.fullName,
+      //   // email: selectedChat?.email,
+      //   // from: UserData?.phoneNumber,
+      //   to: selectedChat?.phoneNumber,
+      // };
+      // await webNotification(notificationPayload);
     } catch (error) {
       setScrollToBottom(false);
       setMessages((prev) => {

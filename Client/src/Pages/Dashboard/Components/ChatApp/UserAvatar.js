@@ -1,5 +1,5 @@
 import { Avatar, Badge } from "@mui/material";
-import AvatarImg from "../../images/notification.png";
+import AvatarImg from "Assets/Images/avatar.png";
 import styles from "./style";
 
 const generateAvatar = (fullName) => {

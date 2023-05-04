@@ -15,9 +15,28 @@ const typoGraphy = {
 };
 
 export default {
+  // chatRoot: {
+  //   display: "flex",
+  //   gap: "10px",
+  // },
   chatRoot: {
-    display: "flex",
-    gap: "10px",
+    position: 'absolute',
+    top: '10%',
+    left: '20%',
+    right: '20%',
+    bottom: '20%',
+    // transform: 'translate(-50%, -50%)',
+    // width: 350,
+    // height: 540,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    borderRadius: ".5rem",
+    py: 2,
+    px: 2,
+    zIndex: "500",
+    borderColor: "var(--themeColorGreen)",
+    height: "fit-content"
   },
   mainCardRoot: {
     width: "420px",
@@ -287,7 +306,7 @@ export default {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    cursor:"no-drop"
+    cursor: "no-drop"
   },
   saveButton: (theme) => ({
     background: theme.palette.primary.main,

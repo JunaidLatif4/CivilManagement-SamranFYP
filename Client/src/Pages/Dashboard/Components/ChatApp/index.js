@@ -1,26 +1,57 @@
 import * as React from "react";
 import { useLocation } from "react-router-dom";
-import { Box } from "@mui/material";
-import { socket } from "../../helpers/sockets";
-import UserList from "./UserList";
+
+// MUI | ANT-D :
+import { Box, Modal } from "@mui/material";
+
+//Components :
 import Chat from "./Chat";
+import UserList from "./UserList";
+
+// API :
+import { GetChannelByProjectAPI } from "API/chat";
+// Redux :
+import { useSelector } from "react-redux";
+// Helpers :
+import { socket } from "../../helpers/sockets";
+
 import styles from "./style";
-import { fetchAllChannel } from "../../api/chat";
-import { getChannel } from "../../helpers/getChannel";
-import { useUserContext } from "../../context/userContext";
+import { toast } from "react-toastify";
 
-const ChatApp = () => {
-  const pageRef = React.useRef(1);
 
-  const { userData } = useUserContext();
+
+
+
+
+const defaultStyle = {
+  position: 'absolute',
+  top: '10%',
+  left: '20%',
+  right: '20%',
+  bottom: '20%',
+  // transform: 'translate(-50%, -50%)',
+  // width: 350,
+  // height: 540,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  borderRadius: ".5rem",
+  py: 2,
+  px: 2,
+  zIndex: "500",
+  borderColor: "var(--themeColorGreen)",
+  height: "fit-content"
+}
+const ChatApp = ({ openModal, closeModal, selectProject }) => {
   const { state } = useLocation();
-  const [channels, setChannels] = React.useState([]);
-  const [channelsData, setChannelData] = React.useState([]);
-  const [channelsLoading, setChannelsLoading] = React.useState(true);
+
+  const UserData = useSelector(state => state.userData);
+
   const [selectedChat, setSelectedChat] = React.useState({});
   const [messagesLoading, setMessagesLoading] = React.useState(false);
   const [selectedChannel, setSelectedChannel] = React.useState({});
-  const [openGroup, setOpenGroup] = React.useState(false)
+
+  const pageRef = React.useRef(1);
 
   const handleAddPage = () => {
     pageRef.current += 1;
@@ -30,104 +61,85 @@ const ChatApp = () => {
     pageRef.current = 1;
   };
 
-  const selectChat = ({
-    name,
-    chatImage,
-    channelId,
-    type,
-    email,
-    _id,
-    phoneNumber,
-    users,
-  }) => {
-    if (selectedChat?.channelId !== channelId) {
+
+  const gettingChannelData = async () => {
+
+    if (!openModal || !selectProject) {
+      setSelectedChat({})
+      setSelectedChannel({})
+      return
+    }
+
+    try {
+      const res = await GetChannelByProjectAPI(selectProject?._id);
+      if (res.error != null) {
+        toast.error(res.error)
+        return
+      }
+      let channelData = res.data?.result
       setMessagesLoading(true);
       handleResetPage();
       setSelectedChat({
-        name,
-        chatImage,
-        channelId,
-        type,
-        email,
-        _id,
-        phoneNumber,
-        users,
+        name: channelData?.name,
+        chatImage: null,
+        channelId: channelData?._id,
+        type: channelData?.type,
+        email: "",
+        _id: UserData?._id,
+        phoneNumber: "",
+        users: channelData?.users,
       });
-    }
-  };
-
-  async function fetchAllChannelFun() {
-    try {
-      setChannelsLoading(true);
-      const { data } = await fetchAllChannel();
-      if (state?.channel) {
-        const { chatImage, name, email, _id, phoneNumber, users, type } = getChannel({
-          channel: state?.channel,
-          currentuser: userData,
-        });
-        selectChat({
-          name,
-          chatImage,
-          channelId: state?.channel?._id,
-          email,
-          _id,
-          phoneNumber,
-          users,
-          type
-        });
-        setSelectedChannel(state?.channel);
-      }
-      setChannels(data);
-      setChannelData(data);
-      const channelIds = data?.map(({ _id }) => _id);
-      socket?.emit("joinChannel", channelIds);
+      setSelectedChannel(channelData);
+      // const channelIds = data?.map(({ _id }) => _id);
+      // socket?.emit("joinChannel", channelIds);
     } catch (error) {
       console.log({ error });
-    } finally {
-      setChannelsLoading(false);
     }
   }
 
   React.useEffect(() => {
-    fetchAllChannelFun();
-    if (userData?.role === "client") {
-      socket?.on("newChannelCreated", (channel) => {
-        // if (channel?.professional_id?._id === userData?._id) {
-        if (channel?.users.includes(userData?._id)) {
-          setChannels((prev) => [...prev, channel]);
-        }
-        socket?.emit("joinChannel", [channel?._id]);
-      });
-    }
-  }, [state]);
+    gettingChannelData();
+    // if (UserData?.role === "client") {
+    //   socket?.on("newChannelCreated", (channel) => {
+    //     if (channel?.users.includes(UserData?._id)) {
+    //       setChannels((prev) => [...prev, channel]);
+    //     }
+    //     socket?.emit("joinChannel", [channel?._id]);
+    //   });
+    // }
+  }, [openModal, selectProject]);
 
 
   return (
     <>
-      <Box sx={styles.chatRoot}>
-        <UserList
-          channels={channels}
-          setChannels={setChannels}
-          channelsData={channelsData}
-          channelsLoading={channelsLoading}
-          selectChat={selectChat}
-          selectedChat={selectedChat}
-          setSelectedChannel={setSelectedChannel}
-          openGroup={openGroup}
-          setOpenGroup={setOpenGroup}
-        />
-        <Chat
-          selectedChat={selectedChat}
-          messagesLoading={messagesLoading}
-          setMessagesLoading={setMessagesLoading}
-          setSelectedChat={setSelectedChat}
-          selectedChannel={selectedChannel}
-          pageRef={pageRef}
-          handleAddPage={handleAddPage}
-          setSelectedChannel={setSelectedChannel}
-          setChannels={setChannels}
-        />
-      </Box>
+      <Modal
+        open={openModal}
+        onClose={closeModal}
+      >
+        <Box sx={styles.chatRoot}>
+          {/* <UserList
+            channels={channels}
+            setChannels={setChannels}
+            channelsData={channelsData}
+            channelsLoading={channelsLoading}
+            selectChat={selectChat}
+            selectedChat={selectedChat}
+            setSelectedChannel={setSelectedChannel}
+            openGroup={openGroup}
+            setOpenGroup={setOpenGroup}
+          /> */}
+          <Chat
+            selectedChat={selectedChat}
+            setSelectedChat={setSelectedChat}
+            messagesLoading={messagesLoading}
+            setMessagesLoading={setMessagesLoading}
+            selectedChannel={selectedChannel}
+            setSelectedChannel={setSelectedChannel}
+            pageRef={pageRef}
+            handleAddPage={handleAddPage}
+          />
+        </Box>
+      </Modal>
     </>
   );
 };

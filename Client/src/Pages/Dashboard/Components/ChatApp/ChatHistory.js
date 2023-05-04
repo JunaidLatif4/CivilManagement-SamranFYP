@@ -1,18 +1,26 @@
 
 import { Fragment, useEffect, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
+
+// MUI | ANT-D :
 import { Card, CardContent, Grid, Typography, Box } from "@mui/material";
+
+// Components :
+import UserAvatar from "./UserAvatar";
+
+// Redux :
+import { useSelector } from "react-redux";
+// Helpers :
+import { isLastMessage, isSameSender, showReceiverTimeSpan, showSenderTimeSpan } from "./Helpers/ChatApp";
 import moment from "moment";
 
-import UserAvatar from "./UserAvatar";
+// CSS :
 import styles from "./style";
-import { useUserContext } from "../../context/userContext";
-import {
-  isLastMessage,
-  isSameSender,
-  showReceiverTimeSpan,
-  showSenderTimeSpan,
-} from "../../helpers/ChatApp";
+
+
+
+
+
 
 const AlwaysScrollToBottom = ({ scrollToBottom }) => {
   const elementRef = useRef();
@@ -20,15 +28,10 @@ const AlwaysScrollToBottom = ({ scrollToBottom }) => {
   return <div ref={elementRef} />;
 };
 
-const ChatHistory = ({
-  messages,
-  theme,
-  selectedChat,
-  scrollToBottom,
-  selectedChannel,
-}) => {
-  const { userData } = useUserContext();
+const ChatHistory = ({ messages, theme, selectedChat, scrollToBottom }) => {
   const navigate = useNavigate();
+
+  const UserData = useSelector(state => state.userData);
 
   const navigateToProfile = () => {
     navigate("/user/profile", {
@@ -41,7 +44,7 @@ const ChatHistory = ({
       <Grid container spacing={2} p="15px 15px 0 15px">
         {messages?.map((message, i) => (
           <Fragment key={message?._id}>
-            {message?.sender_id === userData?._id ? (
+            {message?.sender_id === UserData?._id ? (
               // Right Card
               <Grid item xs={12}>
                 <Grid container spacing={3}>
@@ -74,7 +77,7 @@ const ChatHistory = ({
                       {showSenderTimeSpan(
                         messages,
                         message,
-                        userData?._id
+                        UserData?._id
                       ) && (
                           <span style={styles.rightMessageTime}>
                             {moment(message?.createdAt).fromNow()}
@@ -88,12 +91,10 @@ const ChatHistory = ({
               <Grid item xs={12}>
                 <Grid container spacing={3}>
                   <Grid item xs={12} sm={7} sx={styles.leftMessageWrapper}>
-                    {(isSameSender(messages, message, i, userData?._id) ||
-                      isLastMessage(messages, i, userData?._id)) && (
+                    {(isSameSender(messages, message, i, UserData?._id) ||
+                      isLastMessage(messages, i, UserData?._id)) && (
                         <UserAvatar
-                          src={selectedChat.chatImage}
                           fullName={selectedChat?.name}
-                          onClick={navigateToProfile}
                           customeStyle={styles.leftMessgeAvatar}
                         />
                       )}
@@ -101,8 +102,8 @@ const ChatHistory = ({
                       sx={{
                         ...styles.leftMessageBox,
                         marginLeft:
-                          isSameSender(messages, message, i, userData?._id) ||
-                            isLastMessage(messages, i, userData?._id)
+                          isSameSender(messages, message, i, UserData?._id) ||
+                            isLastMessage(messages, i, UserData?._id)
                             ? "0px"
                             : "43px",
                       }}
@@ -128,7 +129,7 @@ const ChatHistory = ({
                       {showReceiverTimeSpan(
                         messages,
                         message,
-                        userData?._id
+                        UserData?._id
                       ) && (
                           <span style={styles.leftMessageTime}>
                             {moment(message?.createdAt).fromNow()}
