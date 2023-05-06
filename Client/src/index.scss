@@ -133,6 +133,11 @@ input {
 
 
 // Flex Properties
+.flexLine {
+    display: flex;
+    align-items: center;
+    gap: .7rem;
+}
 .flexLineSpace {
     display: flex;
     justify-content: space-between;

@@ -4,17 +4,18 @@ const MessageSchema = new Schema(
   {
     sender_id: {
       type: String,
-      ref: 'User',
+      require: true
     },
-    senderName: {
-      type: String,
+    senderData: {
+      type: Schema.Types.ObjectId,
+      ref: 'user',
     },
     receiver_id: {
       type: String,
     },
     channel_id: {
-      type: String,
-      ref: 'Channel',
+      type: Schema.Types.ObjectId,
+      ref: 'ChannelModel',
     },
     message: {
       type: String,
@@ -48,3 +49,9 @@ const MessageSchema = new Schema(
 );
 
 module.exports = model('Message', MessageSchema);
+
+MessageSchema.post('find', function(doc, next) {
+  doc.populate('senderData').then(function() {
+    next();
+  });
+});

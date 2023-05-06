@@ -7,5 +7,6 @@ router.use(routes.AUTH, controllers.auth);
 router.use(routes.ADMIN, controllers.admin);
 router.use(routes.USER, controllers.user);
 router.use(routes.PROJECT, controllers.project);
+router.use(routes.CHAT, controllers.chat);
 
 module.exports = router;

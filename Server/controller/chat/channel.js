@@ -7,7 +7,7 @@ const UserModel = require('../../model/user');
 const createError = require('http-errors');
 const fs = require('fs');
 const path = require('path');
-const { sendCustomSms } = require('../libs/otp_service.lib');
+// const { sendCustomSms } = require('../libs/otp_service.lib');
 
 
 
@@ -63,10 +63,10 @@ module.exports = {
 
   GetChennelByProject: async (req, res, next) => {
     try {
-      let { projectId } = req.body;
+      let { projectId } = req.params;
       const currentUser = req;
 
-      const channels = await ChannelModel.find({ projectId }).populate({ path: 'users' });
+      const channels = await ChannelModel.findOne({ projectId }).populate({ path: 'users' }).populate("projectId");
 
       res.json({ satus: 200, result: channels });
     } catch (error) {

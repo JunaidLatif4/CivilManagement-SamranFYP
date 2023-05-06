@@ -8,12 +8,12 @@ const path = require("path");
 
 
 
-const CreateChannelByProject = async ({ name, users, projectId , currentUser }, next) => {
+const CreateChannelByProject = async ({ name, users, projectId, currentUser }, next) => {
     try {
         let type = "group";
         let response;
 
-        let findChannel = await ChannelModel.find({ users: users });
+        let findChannel = await ChannelModel.find({ projectId });
 
         if (findChannel.length > 0) {
             response = {

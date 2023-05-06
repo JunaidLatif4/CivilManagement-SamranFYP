@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
 
 // MUI | ANT-D :
 import { Button, Tag } from 'antd';
@@ -8,10 +8,11 @@ import { GrView } from "react-icons/gr";
 import { MdDelete } from "react-icons/md";
 
 // Components :
-import Table from "./Component/table/Table"
-import AddNewProject from "./Component/AddProjectModal/NewProjectModal"
-import AllProject from "./Component/AllProjects/AllProjects"
-import ViewProjectPage from "./Component/ViewProject/ViewProjectPage"
+import Table from "./Component/table/Table";
+import AddNewProject from "./Component/AddProjectModal/NewProjectModal";
+import AllProject from "./Component/AllProjects/AllProjects";
+import ViewProjectPage from "./Component/ViewProject/ViewProjectPage";
+import ChatApp from "../ChatApp/index";
 
 // API :
 import { GetAllProjectsAPI } from '../../../../API/project';
@@ -32,14 +33,20 @@ const Projects = () => {
     const [selectedProject, setSelectedProject] = useState(null)
 
 
+    const closeModel = () => {
+        setCurrentPage("details")
+    }
+
     return (
         <>
             <div className="dashboardProjectContainer">
                 {
                     currentPage == "all" ?
                         <AllProject allProjects={allProjects} setAllProjects={setAllProjects} currentPage={currentPage} setCurrentPage={setCurrentPage} selectedProject={selectedProject} setSelectedProject={setSelectedProject} />
-                        :
-                        <ViewProjectPage selectedProject={selectedProject} />
+                        : currentPage == "chat" ?
+                            <ChatApp openModal={currentPage == "chat" ? true : false} selectProject={selectedProject} closeModal={closeModel} />
+                            :
+                            <ViewProjectPage selectedProject={selectedProject} setCurrentPage={setCurrentPage} currentPage={currentPage} />
                 }
             </div>
         </>

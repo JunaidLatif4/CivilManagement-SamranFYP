@@ -15,7 +15,7 @@ const GetChannelByProjectAPI = async (projectId) => {
 
     try {
         let res = await axios({
-            url: `/channel/${projectId}`,
+            url: `/chat/channel/${projectId}`,
             method: "GET",
             headers: AuthTokenGen()
         })
@@ -38,7 +38,7 @@ const GetAllMessagesByChannelAPI = async (channelId , page) => {
 
     try {
         let res = await axios({
-            url: `/message/${channelId}/${page}`,
+            url: `/chat/message/${channelId}/${page}`,
             method: "GET",
             headers: AuthTokenGen()
         })
@@ -61,7 +61,7 @@ const CreateMessageAPI = async ({ message, type, channel_id, receiver_id }) => {
 
     try {
         let res = await axios({
-            url: "/message",
+            url: "/chat/message",
             method: "POST",
             data: {
                 message,

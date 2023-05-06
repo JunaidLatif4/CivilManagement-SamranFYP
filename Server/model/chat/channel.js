@@ -9,7 +9,7 @@ const ChannelSchema = new Schema(
     users: [
       {
         type: Schema.Types.ObjectId,
-        ref: 'User',
+        ref: 'user',
       },
     ],
     hasUnreadMessage: {
@@ -26,7 +26,7 @@ const ChannelSchema = new Schema(
     },
     admin: {
       type: Schema.Types.ObjectId,
-      ref: 'User',
+      ref: 'user',
     },
     chatImage: {
       type: String,

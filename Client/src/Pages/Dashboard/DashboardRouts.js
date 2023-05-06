@@ -27,9 +27,8 @@ const getSideBarData = ({ label, key, icon, children, element }) => {
 
 const routsList = [
     getSideBarData({ label: 'Dashboard', key: '/', icon: <MdDashboard />, element: <Home /> }),
-    getSideBarData({ label: 'Users', key: '/users', icon: <FiUsers />, element: <User /> }),
+    // getSideBarData({ label: 'Users', key: '/users', icon: <FiUsers />, element: <User /> }),
     getSideBarData({ label: 'Projects', key: '/project', icon: <AiOutlineFundProjectionScreen />, element: <Projects /> }),
-    getSideBarData({ label: 'EditProject', key: '/editproject', icon: <AiOutlineFundProjectionScreen />, element: <ViewProjectPage /> }),
     // getSideBarData({ label: 'Blogs', key: '/blogs', icon: <SiBloglovin />, element: <Blogs /> }),
     // getSideBarData('Team', 'sub2', <TeamOutlined />, [getSideBarData('Team 1', '6'), getSideBarData('Team 2', '8')]),
 ];

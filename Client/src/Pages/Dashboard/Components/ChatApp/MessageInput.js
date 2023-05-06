@@ -44,13 +44,17 @@ const MessageInput = ({ selectedChannel, selectedChat, setMessages, setScrollToB
       const payloadMsg = { ...payload, sender_id: UserData?._id, _id: ID };
       setMessages((prev) => [...prev, payloadMsg]);
       setScrollToBottom(true);
-      const { data } = await CreateMessageAPI(payload);
-
+      const res = await CreateMessageAPI(payload);
+      if(res.error != null){
+        toast.error(res.error)
+        return
+      }
+      let messageData = res.data?.result;
       setScrollToBottom(false);
       setMessages((prev) => {
         const messages = [...prev];
         const msgIndex = messages?.findIndex(({ _id }) => _id === ID);
-        messages[msgIndex] = data;
+        messages[msgIndex] = messageData;
         return messages;
       });
 

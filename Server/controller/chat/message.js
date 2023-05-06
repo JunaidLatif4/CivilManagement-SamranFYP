@@ -1,56 +1,60 @@
 const fs = require('fs');
 const MessageModel = require('../../model/chat/message');
-const User = require('../models/user.model');
-const Channel = require('../models/channel.model');
+const User = require('../../model/user');
+const Channel = require('../../model/chat/channel');
 
 const path = require('path');
-const { uploadToS3Bucket } = require('../utils/s3Bucket.util');
-const Notification = require('../models/notification.model');
-var FCM = require('fcm-node');
+// const { uploadToS3Bucket } = require('../utils/s3Bucket.util');
+// const Notification = require('../models/notification.model');
+// var FCM = require('fcm-node');
 
 module.exports = {
   create: async (req, res, next) => {
     try {
-      const {
-        body: payload,
-        user: { _id, userName, fullName },
-      } = req;
+      let { receiver_id, channel_id, message, type } = req.body;
+      let currentUser = req.user;
 
-      if (payload?.type === 'attachment') {
-        const file = req.files?.attachment[0];
+      // if (payload?.type === 'attachment') {
+      // const file = req.files?.attachment[0];
 
-        filePath = path.join(__dirname, '../uploads/', file.filename);
-        let blob = fs.readFileSync(filePath);
-        const uploadFile = await uploadToS3Bucket(blob, file.filename);
-        fileUrl = uploadFile.Location;
-        if (fileUrl) {
-          fs.unlinkSync(filePath);
-        }
+      // filePath = path.join(__dirname, '../uploads/', file.filename);
+      // let blob = fs.readFileSync(filePath);
+      // const uploadFile = await uploadToS3Bucket(blob, file.filename);
+      // fileUrl = uploadFile.Location;
+      // if (fileUrl) {
+      //   fs.unlinkSync(filePath);
+      // }
 
-        payload.attachment = fileUrl;
-        payload.fileType = file.mimetype;
-        payload.fileName = file.originalname;
-      }
+      // payload.attachment = fileUrl;
+      // payload.fileType = file.mimetype;
+      // payload.fileName = file.originalname;
+      // }
 
-      payload.sender_id = _id.toString();
-      payload.senderName = userName ?? fullName;
-      payload.reply_of = payload?.reply_of ?? null;
+      // payload.sender_id = _id.toString();
+      // payload.senderName = userName ?? fullName;
+      // payload.reply_of = payload?.reply_of ?? null;
       var d = new Date();
-      var date = [
+      var dateTime = [
         d.getFullYear(),
         ('0' + (d.getMonth() + 1)).slice(-2),
         ('0' + d.getDate()).slice(-2),
       ].join('-');
-      payload.time = date;
+      // payload.time = date;
 
-      const message = await MessageModel.create(payload);
-      const result = await MessageModel.findById(message?._id).populate({
-        path: 'reply_of',
-        select: 'message',
+      let result = new MessageModel({
+        sender_id: currentUser?._id,
+        senderData: currentUser?._id,
+        receiver_id,
+        channel_id,
+        message,
+        type,
+        time: dateTime
       });
-
-      res.json({ status: 201, message: 'Message Created', data: result });
+      await result.save();
+      await result.populate("senderData");
+      res.json({ status: 201, message: 'Message Created', result });
     } catch (error) {
+      console.log("---->" , error);
       next(error);
     }
   },
@@ -63,7 +67,7 @@ module.exports = {
         .populate({
           path: 'reply_of',
           select: 'message',
-        })
+        }).populate("senderData")
         .sort({ createdAt: -1 })
         .limit(limit * 1)
         .skip((page - 1) * limit)
@@ -73,7 +77,7 @@ module.exports = {
       // messages.reverse() return messages in reverse order
       res.json({
         satus: 200,
-        data: messages.reverse(),
+        result: messages.reverse(),
         pagination: {
           page,
           limit,

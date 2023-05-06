@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom'
 
 // MUI | ANT-D :
@@ -13,6 +13,9 @@ import Navbar from '../../Components/Navbar/Navbar'
 
 // Routes :
 import RoutesList from "./DashboardRouts"
+import { useSelector } from 'react-redux'
+import { socket } from 'Utils/sockets'
+
 // CSS :
 import './Dashboard.scss';
 
@@ -25,6 +28,7 @@ const Dashboard = () => {
     const Location = useLocation()
 
     let selectedRoutes = [Location.pathname.split("/dashboard")[1] ? Location.pathname.split("/dashboard")[1] : "/"]
+    let UserData = useSelector(state => state.userData)
 
     const [collapsed, setCollapsed] = useState(false);
 
@@ -32,6 +36,27 @@ const Dashboard = () => {
         let path = menu?.key;
         Navigate("/dashboard" + path)
     }
+
+    useEffect(() => {
+        socket.emit("joinUserRoom", UserData?._id);
+        socket.emit("checkUnreadMessage", UserData?._id, UserData?.role);
+        socket.on("unreadMessageStatus", (result) => {
+            // setUnreadMessageDot(result);
+        });
+    }, []);
+
+    useEffect(() => {
+        socket.on("newMessage", () => {
+            socket.emit("checkUnreadMessage", UserData?._id, UserData?.role);
+        });
+        socket.on("allMessageRead", () => {
+            socket.emit("checkUnreadMessage", UserData?._id, UserData?.role);
+        });
+        socket.on("ping", () => {
+            console.log("ping received");
+            socket.emit("pong", { beat: 1 });
+        });
+    }, []);
 
     return (
         <>

@@ -6,14 +6,14 @@ import { Box, Modal } from "@mui/material";
 
 //Components :
 import Chat from "./Chat";
-import UserList from "./UserList";
+// import UserList from "./UserList";
 
 // API :
 import { GetChannelByProjectAPI } from "API/chat";
 // Redux :
 import { useSelector } from "react-redux";
 // Helpers :
-import { socket } from "../../helpers/sockets";
+import { socket } from "Utils/sockets";
 
 import styles from "./style";
 import { toast } from "react-toastify";
@@ -80,7 +80,7 @@ const ChatApp = ({ openModal, closeModal, selectProject }) => {
       setMessagesLoading(true);
       handleResetPage();
       setSelectedChat({
-        name: channelData?.name,
+        name: channelData?.projectId?.title,
         chatImage: null,
         channelId: channelData?._id,
         type: channelData?.type,
@@ -91,7 +91,7 @@ const ChatApp = ({ openModal, closeModal, selectProject }) => {
       });
       setSelectedChannel(channelData);
       // const channelIds = data?.map(({ _id }) => _id);
-      // socket?.emit("joinChannel", channelIds);
+      socket?.emit("joinChannel", [channelData?._id]);
     } catch (error) {
       console.log({ error });
     }

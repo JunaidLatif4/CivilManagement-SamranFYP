@@ -11,7 +11,7 @@ router.use(auth.authenticate)
 router.get("/", projectController.projectGet);
 router.post("/", projectController.projectPost);
 
-router.route("/:id")
-    .get()
+// router.route("/:id")
+//     .get()
 
 module.exports = router;

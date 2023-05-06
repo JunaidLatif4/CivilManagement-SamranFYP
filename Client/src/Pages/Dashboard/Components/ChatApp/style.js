@@ -21,7 +21,7 @@ export default {
   // },
   chatRoot: {
     position: 'absolute',
-    top: '10%',
+    top: '5%',
     left: '20%',
     right: '20%',
     bottom: '20%',

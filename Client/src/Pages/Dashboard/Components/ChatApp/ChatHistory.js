@@ -94,8 +94,9 @@ const ChatHistory = ({ messages, theme, selectedChat, scrollToBottom }) => {
                     {(isSameSender(messages, message, i, UserData?._id) ||
                       isLastMessage(messages, i, UserData?._id)) && (
                         <UserAvatar
-                          fullName={selectedChat?.name}
+                          fullName={message?.senderData?.firstName ? message?.senderData?.firstName : selectedChat?.name}
                           customeStyle={styles.leftMessgeAvatar}
+                          src={message?.senderData?.profileImage?.url || null}
                         />
                       )}
                     <Box
@@ -119,6 +120,7 @@ const ChatHistory = ({ messages, theme, selectedChat, scrollToBottom }) => {
                                   lineHeight="20px"
                                   sx={styles.breakWord}
                                 >
+                                  <p style={{ fontSize: "10px", color: "gray", marginTop: "-5px" }}> {`${message?.senderData?.firstName} ${message?.senderData?.lastName}`} </p>
                                   {message?.message}
                                 </Typography>
                               )}

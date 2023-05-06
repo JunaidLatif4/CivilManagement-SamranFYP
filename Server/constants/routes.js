@@ -4,4 +4,5 @@ module.exports = {
   ADMIN: `/admin`,
   MODEL: `/model`,
   PROJECT: `/project`,
+  CHAT: `/chat`,
 };

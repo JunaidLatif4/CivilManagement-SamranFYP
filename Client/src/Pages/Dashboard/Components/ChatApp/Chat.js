@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 // MUI | ANT-D :
@@ -9,7 +9,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import UserAvatar from "./UserAvatar";
 import ChatHistory from "./ChatHistory";
 import MessageInput from "./MessageInput";
-import MainCard from "../shared/MainCard";
+// import MainCard from "../shared/MainCard";
 
 // APIs :
 import { GetAllMessagesByChannelAPI } from "API/chat";
@@ -17,7 +17,7 @@ import { GetAllMessagesByChannelAPI } from "API/chat";
 import { useSelector } from "react-redux";
 // Helpers :
 import { toast } from "react-toastify";
-import { socket } from "../../helpers/sockets";
+import { socket } from "Utils/sockets";
 
 // CSS :
 import styles from "./style";
@@ -55,6 +55,7 @@ const Chat = ({ selectedChat, setSelectedChat, messagesLoading, setMessagesLoadi
       }
       let messagesData = res.data?.result
       let pagination = res.data?.pagination
+      console.log("**************", res.data);
       handleAddPage();
       paginationRef.current = pagination;
       setMessages(messagesData);
@@ -94,27 +95,28 @@ const Chat = ({ selectedChat, setSelectedChat, messagesLoading, setMessagesLoadi
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (selectedChat) {
       gettingAllMessages(1);
     }
   }, [selectedChat]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     socket.on("newMessage", (newMessage) => {
       setScrollToBottom(true);
       setAppendMsg(newMessage);
     });
   }, []);
 
-  React.useEffect(async () => {
+  useEffect(() => {
     if (
       UserData?._id !== appendMsg?.sender_id &&
       selectedChat?.channelId === appendMsg?.channel_id
     ) {
       setMessages((prev) => [...prev, appendMsg]);
       setScrollToBottom(false);
-      socket.emit("readMessage", appendMsg?.channel_id);
+      // socket.emit("readMessage", appendMsg?.channel_id);
+      // await readMessage({ channel_id: appendMsg?.channel_id });
     }
   }, [appendMsg]);
 
@@ -124,7 +126,7 @@ const Chat = ({ selectedChat, setSelectedChat, messagesLoading, setMessagesLoadi
     });
   };
 
-
+  console.log("------->", messages);
   return (
     !selectedChat ?
       <Box sx={styles.notFoundMessage}>
@@ -169,7 +171,6 @@ const Chat = ({ selectedChat, setSelectedChat, messagesLoading, setMessagesLoadi
                         component="div"
                         fontSize="20px"
                         fontWeight="600"
-                        onClick={navigateToProfile}
                         sx={{ cursor: "pointer" }}
                       >
                         {selectedChat?.name}
