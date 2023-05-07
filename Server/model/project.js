@@ -1,5 +1,18 @@
 const mongoose = require('mongoose');
 
+
+const stepSchema = new mongoose.Schema({
+    name: String,
+    description: String,
+    type: String,
+    reviewer: String,
+    submited: {
+        type: Boolean,
+        default: false
+    },
+    deadLine: String,
+})
+
 const projectSchema = new mongoose.Schema({
     title: {
         type: String,
@@ -32,6 +45,7 @@ const projectSchema = new mongoose.Schema({
         ref: "user",
         default: null
     },
+    progress: [stepSchema]
 },
     {
         timestamps: true,
