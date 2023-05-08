@@ -25,7 +25,7 @@ exports.GetProjectById = catchAsync(async (req, res) => {
         let currentUser = req.user;
         let { projectId } = req.params;
         const result = await ProjectModel.findById(projectId).populate("client contractor engineer").select("+progress");
-        console.log("-------->" , result);
+        console.log("-------->", result);
         res.status(STATUS_CODE.OK).json({ result, message: "Data Fatched Success Fully" })
     } catch (err) {
         res.status(STATUS_CODE.BAD_REQUEST).json({ statusCode: STATUS_CODE.SERVER_ERROR, err })
@@ -53,11 +53,36 @@ exports.projectPost = catchAsync(async (req, res, next) => {
     }
 
 })
+exports.inviteResponse = catchAsync(async (req, res, next) => {
+    let { response, projectId } = req.body;
+
+    const currentUser = req?.user
+
+    try {
+        const projectData = await ProjectModel.findById(projectId)
+        if (response == "reject") {
+            projectData.status = "rejected"
+            projectData.rejectedBy = currentUser?._id
+        } else {
+            projectData.acceptedBy = [...projectData.acceptedBy, currentUser?.role]
+            if (projectData?.acceptedBy?.includes("contractor") && projectData?.acceptedBy?.includes("engineer")) {
+                projectData.status = "inprogress"
+            }
+        }
+        await projectData.save()
+        res.status(STATUS_CODE.OK).json({ message: `Invite Updated`, result: projectData })
+
+    } catch (err) {
+        res.status(STATUS_CODE.SERVER_ERROR).json({ statusCode: STATUS_CODE.SERVER_ERROR, err })
+    }
+
+
+})
 
 exports.addStepToProject = catchAsync(async (req, res, next) => {
     const currentUser = req.user;
     let { projectId } = req.params;
-    const { name, description, type, reviewer, deadLine } = req.body
+    const { name, description, type, reviewer, deadLine, to } = req.body
 
     try {
         let stepDetails = {
@@ -65,7 +90,9 @@ exports.addStepToProject = catchAsync(async (req, res, next) => {
             description,
             type,
             reviewer,
-            deadLine
+            deadLine,
+            by: currentUser._id,
+            to
         }
         const result = await ProjectModel.findByIdAndUpdate(projectId, { $push: { progress: stepDetails } }, { new: true })
 

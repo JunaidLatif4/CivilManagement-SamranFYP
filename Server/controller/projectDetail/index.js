@@ -11,6 +11,9 @@ router.use(auth.authenticate)
 router.get("/", projectController.projectGet);
 router.get("/:projectId", projectController.GetProjectById);
 router.post("/", projectController.projectPost);
+
+router.post("/inviteResponse", projectController?.inviteResponse)
+
 router.post("/step/:projectId", projectController.addStepToProject);
 
 // router.route("/:id")

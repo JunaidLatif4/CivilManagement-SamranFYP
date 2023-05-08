@@ -142,42 +142,71 @@ export default function ViewProjectPage({ selectedProject, setCurrentPage, curre
         </div>
         <div className="flexLineSpace">
           <div className="heading">Progress Details</div>
-          {UserData?.role == "client" &&
-            <>
-              <Button style={{ width: "150px" }} className="EditPagebtn" onClick={() => setStepCreationModal(true)}>Add New Step</Button>
-              <Modal title="Select Work Step" open={stepCreationModal} onOk={addNewStep} confirmLoading={btnloading} onCancel={closeModal}>
-                <div className="flexColumn">
-                  <Select
-                    showSearch
-                    placeholder="Select a Step"
-                    optionFilterProp="children"
-                    onChange={handleSelectChange}
-                    // onSearch={onSearch}
-                    value={formData?.name}
-                    filterOption={(input, option) =>
-                      (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-                    }
-                    options={AllSteps}
-                  />
-                  <TextArea rows={2} placeholder="Description" maxLength={50} onChange={enteringData} value={formData?.description} name="description" />
-                  <div className="flexLine">
-                    <p style={{ width: "70px" }} className="title">Type :</p>
-                    <Radio.Group onChange={enteringData} value={formData?.type} name="type">
-                      <Radio value={"document"}>Document</Radio>
-                      <Radio value={"confirmation"}>Confirmation</Radio>
-                    </Radio.Group>
-                  </div>
-                  <div className="flexLine">
-                    <p style={{ width: "70px" }} className="title">Reviewer :</p>
-                    <Radio.Group onChange={enteringData} value={formData?.reviewer} name="reviewer">
-                      <Radio value={"clent"}>Client</Radio>
-                      <Radio value={"contractor"}>Contractor</Radio>
-                    </Radio.Group>
-                  </div>
-                </div>
-              </Modal>
-            </>
-          }
+          <Button style={{ width: "150px" }} className="EditPagebtn" onClick={() => setStepCreationModal(true)}>Add New Step</Button>
+          <Modal title="Select Work Step" open={stepCreationModal} onOk={addNewStep} confirmLoading={btnloading} onCancel={closeModal}>
+            <div className="flexColumn">
+              <Select
+                showSearch
+                placeholder="Select a Step"
+                optionFilterProp="children"
+                onChange={handleSelectChange}
+                // onSearch={onSearch}
+                value={formData?.name}
+                filterOption={(input, option) =>
+                  (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                }
+                options={AllSteps}
+              />
+              <TextArea rows={2} placeholder="Description" maxLength={50} onChange={enteringData} value={formData?.description} name="description" />
+              <div className="flexLine">
+                <p style={{ width: "70px" }} className="title">Type :</p>
+
+                <Radio.Group onChange={enteringData} value={formData?.type} name="type">
+                  <Radio value={"document"}>Document</Radio>
+                  <Radio value={"confirmation"}>Confirmation</Radio>
+                </Radio.Group>
+              </div>
+              <div className="flexLine">
+                <p style={{ width: "70px" }} className="title">Ask From :</p>
+                <Radio.Group onChange={enteringData} value={formData?.reviewer} name="reviewer">
+                  {
+                    ["client", "contractor", "engineer"].map((role) => {
+                      return (
+                        UserData?.role != role &&
+                        <>
+                          <Radio value={role}>{role?.toLocaleUpperCase()}</Radio>
+                        </>
+                      )
+                    })
+                  }
+                </Radio.Group>
+              </div>
+              <div className="flexLine">
+                <p style={{ width: "70px" }} className="title">Expire In :</p>
+                <Select
+                  showSearch
+                  placeholder="Select Days"
+                  // size="small"
+                  optionFilterProp="children"
+                  style={{
+                    width: 150,
+                  }}
+                  // onChange={handleChange}
+                  filterOption={(input, option) =>
+                    (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                  }
+                  options={
+                    new Array(100).fill(0).map((value, index) => {
+                      return {
+                        label: `${index + 1} ${index + 1 == 1 ? "Day" : "Days"}`,
+                        value: `${index + 1}`
+                      }
+                    })
+                  }
+                />
+              </div>
+            </div>
+          </Modal>
         </div>
         <div className="progressDetails">
           {
@@ -219,7 +248,6 @@ export default function ViewProjectPage({ selectedProject, setCurrentPage, curre
           }
         </div>
         <div className="EditPageButtons">
-          <Button className="EditPagebtn progressbtn">Progress</Button>
           <Button className="EditPagebtn Chatbtn" onClick={() => setCurrentPage("chat")}>Chat</Button>
         </div>
       </div>
