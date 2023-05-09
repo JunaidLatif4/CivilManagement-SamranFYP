@@ -1,20 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useLocation } from "react-router-dom";
 
-import { Button, Input, Modal, Select, Radio } from "antd";
+import { Button, Input, Modal, Select, Radio, Tag } from "antd";
 import { CircularProgress } from "@mui/material";
 
 // Assets | ICONS :
 import NoImage from "Assets/Images/noImage.png"
 import { IoMdArrowRoundBack } from "react-icons/io"
-import { GrCloudUpload } from "react-icons/gr"
+import { GrCloudUpload, GrCloudDownload } from "react-icons/gr"
 
 // APIs :
-import { CreatProjectStepAPI, GetProjectsAPI } from "API/project";
+import { CreatProjectStepAPI, GetProjectsAPI, ProjectStepResponseAPI } from "API/project";
 // Redux :
 import { useSelector } from "react-redux";
 // Data :
 import AllSteps from "./AllSteps";
+
+// Helper :
+import CountdownTimer from "react-component-countdown-timer"
+import "react-component-countdown-timer/lib/styles.scss";
 
 // CSS :
 import "./ViewProjectPage.scss";
@@ -29,22 +33,30 @@ import { useEffect } from "react";
 const { TextArea } = Input;
 export default function ViewProjectPage({ selectedProject, setCurrentPage, currentPage }) {
   let location = useLocation();
+  let fileInput = useRef(null)
 
   const UserData = useSelector(state => state?.userData)
 
   const [selectedProjectData, setSelectedProjectData] = useState(null)
   const [loading, setLoading] = useState(false)
   const [btnloading, setBtnLoading] = useState(false)
+  const [submitloading, setSubmitLoading] = useState(false)
   const [reload, setReload] = useState(false)
 
   const [formData, setFormData] = useState({
     name: null,
     type: "",
-    reviewer: "",
+    from: "",
     description: "",
-    deadline: ""
+    deadLine: ""
   })
   const [stepCreationModal, setStepCreationModal] = useState(false)
+
+  const [submitData, setSubmitData] = useState({
+    stepId: null,
+    response: null,
+    type: null
+  })
 
 
   const enteringData = (event) => {
@@ -55,10 +67,10 @@ export default function ViewProjectPage({ selectedProject, setCurrentPage, curre
       [name]: value
     })
   }
-  const handleSelectChange = (event) => {
+  const handleSelectChange = (name, value) => {
     setFormData({
       ...formData,
-      name: event
+      [name]: value
     })
   }
 
@@ -69,9 +81,9 @@ export default function ViewProjectPage({ selectedProject, setCurrentPage, curre
     setFormData({
       title: "",
       type: "",
-      reviewer: "",
+      from: "",
       description: "",
-      deadline: ""
+      deadLine: ""
     })
   }
   const addNewStep = async () => {
@@ -86,6 +98,86 @@ export default function ViewProjectPage({ selectedProject, setCurrentPage, curre
     setBtnLoading(false)
   }
 
+
+  const uploadFile = (stepId) => {
+    setSubmitData({
+      stepId,
+      type: "document",
+      response: null
+    })
+    fileInput.current.click()
+  }
+  const downloadFile = (fileUrl) => {
+    // setSubmitData({
+    //   stepId,
+    //   type: "document",
+    //   response: null
+    // })
+    // fileInput.current.click()
+  }
+  const handleUploadingFile = (event) => {
+    setSubmitData({
+      ...submitData,
+      response: event.target.files[0]
+    })
+  }
+  const enteringResponse = (stepId, event) => {
+    let { value } = event.target;
+    setSubmitData({
+      stepId,
+      type: "response",
+      response: value
+    })
+  }
+
+  const submitResponse = async () => {
+    setSubmitLoading(true)
+    let fData = new FormData()
+    fData.append("stepId", submitData.stepId)
+    fData.append("type", submitData.type)
+    if (submitData.type == "document") {
+      fData.append("document", submitData.response)
+    } else {
+      fData.append("response", submitData.response)
+    }
+    let res = await ProjectStepResponseAPI(selectedProject?._id, fData)
+    if (res.error != null) {
+      toast.error(res.error)
+    } else {
+      cancleSubmit()
+      toast.success(res.data?.message)
+      setReload(!reload)
+    }
+    setSubmitLoading(false)
+  }
+  const cancleSubmit = () => {
+    setSubmitData({
+      stepId: null,
+      response: null,
+      type: null
+    })
+  }
+
+
+  const calculateTime = (days, startTime) => {
+    if (!startTime) {
+      return 0
+    }
+    let currentTime = new Date(startTime).getTime()
+    let e = new Date(startTime)
+
+    let date = new Date()
+    e.setDate(e.getDate() + Number(days))
+
+    let difference = e.getTime() - date.getTime()
+
+    let drivedSeconds = difference / 1000
+
+    console.log(e);
+    return drivedSeconds
+  }
+
+
   const gettingStepData = async () => {
     setLoading(true)
     let res = await GetProjectsAPI(selectedProject?._id)
@@ -99,7 +191,6 @@ export default function ViewProjectPage({ selectedProject, setCurrentPage, curre
   useEffect(() => {
     gettingStepData()
   }, [reload])
-  console.log("-----------------999999999999> ", selectedProjectData);
   return (
     <>
       <div className="EditUserMainContainer">
@@ -149,9 +240,8 @@ export default function ViewProjectPage({ selectedProject, setCurrentPage, curre
                 showSearch
                 placeholder="Select a Step"
                 optionFilterProp="children"
-                onChange={handleSelectChange}
-                // onSearch={onSearch}
                 value={formData?.name}
+                onChange={(value) => handleSelectChange("name", value)}
                 filterOption={(input, option) =>
                   (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
                 }
@@ -168,7 +258,7 @@ export default function ViewProjectPage({ selectedProject, setCurrentPage, curre
               </div>
               <div className="flexLine">
                 <p style={{ width: "70px" }} className="title">Ask From :</p>
-                <Radio.Group onChange={enteringData} value={formData?.reviewer} name="reviewer">
+                <Radio.Group onChange={enteringData} value={formData?.from} name="from">
                   {
                     ["client", "contractor", "engineer"].map((role) => {
                       return (
@@ -187,6 +277,8 @@ export default function ViewProjectPage({ selectedProject, setCurrentPage, curre
                   showSearch
                   placeholder="Select Days"
                   // size="small"
+                  value={formData?.deadLine}
+                  onChange={(value) => handleSelectChange("deadLine", value)}
                   optionFilterProp="children"
                   style={{
                     width: 150,
@@ -224,13 +316,77 @@ export default function ViewProjectPage({ selectedProject, setCurrentPage, curre
                           <div className="workCard">
                             <div className="subHeading name">{data?.name}</div>
                             <div className="description">{data?.description}</div>
-                            <div className="uploadInput">
-                              <p>SelectFile</p>
-                              <GrCloudUpload className="icon" />
+                            {
+                              data?.submited ?
+                                data?.type == "document" ?
+                                  <>
+                                    <div className="uploadInput">
+                                      <p> {data?.response} </p>
+                                      <GrCloudDownload className="icon" onClick={() => downloadFile(data?.response)} />
+                                    </div>
+                                  </>
+                                  :
+                                  <>
+                                    <div className="uploadInput">
+                                      <p> Response :- </p>
+                                      <Radio.Group
+                                        options={[{ label: "Yess", value: "yess" }, { label: "No", value: "no" }]}
+                                        value={data?.response}
+                                        optionType="button"
+                                        buttonStyle="solid"
+                                      />
+                                    </div>
+                                  </>
+                                :
+                                data?.from?._id == UserData?._id ?
+                                  data?.type == "document" ?
+                                    <>
+                                      <input type="file" hidden ref={fileInput} onChange={handleUploadingFile} />
+                                      <div className="uploadInput">
+                                        <p> {submitData?.response?.name || "SelectFile"} </p>
+                                        <GrCloudUpload className="icon" onClick={() => uploadFile(data?._id)} />
+                                      </div>
+                                    </>
+                                    :
+                                    <>
+                                      <div className="uploadInput">
+                                        <p> Your Response </p>
+                                        <Radio.Group
+                                          options={[{ label: "Yess", value: "yess" }, { label: "No", value: "no" }]}
+                                          onChange={(event) => enteringResponse(data?._id, event)}
+                                          value={submitData?.response}
+                                          optionType="button"
+                                          buttonStyle="solid"
+                                        />
+                                      </div>
+                                    </>
+                                  :
+                                  null
+                            }
+                            {
+                              submitData?.stepId == data?._id &&
+                              <div className="btnBox">
+                                <Button size="small" className="btn" style={{ backgroundColor: "red" }} onClick={cancleSubmit}>CANCLE</Button>
+                                <Button size="small" className="btn" onClick={submitResponse} loading={submitloading}>SUBMIT</Button>
+                              </div>
+                            }
+                            <div className="status">
+                              {
+                                data.submited ?
+                                  <Tag color="green">SUBMITED</Tag>
+                                  :
+                                  <Tag color="yellow">PENDING</Tag>
+                              }
                             </div>
-                            <div className="btnBox">
-                              <Button size="small" className="btn" style={{ backgroundColor: "red" }}>CANCLE</Button>
-                              <Button size="small" className="btn">SUBMIT</Button>
+                            {
+                              !data?.submited &&
+                              <div className="time">
+                                <CountdownTimer count={calculateTime(data?.deadLine, data?.createdAt)} showTitle size={12} direction="right" labelSize={10} />
+                              </div>
+                            }
+                            <div className="editors">
+                              <div className="by"> <p>ASK BY :-</p> <p> {data.by?.role} <br /> {data.by?.firstName} </p>  </div>
+                              <div className="from"> <p>ASK FROM :-</p> <p> {data.from?.role} <br /> {data.from?.firstName} </p>  </div>
                             </div>
                           </div>
                         </>

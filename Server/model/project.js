@@ -5,7 +5,6 @@ const stepSchema = new mongoose.Schema({
     name: String,
     description: String,
     type: String,
-    reviewer: String,
     submited: {
         type: Boolean,
         default: false
@@ -14,12 +13,13 @@ const stepSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "user"
     },
-    to: {
+    from: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "user"
     },
+    response: String,
     deadLine: String,
-})
+}, { timestamps: true, })
 
 const projectSchema = new mongoose.Schema({
     title: {
