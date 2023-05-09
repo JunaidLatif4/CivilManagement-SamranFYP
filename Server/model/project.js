@@ -5,13 +5,21 @@ const stepSchema = new mongoose.Schema({
     name: String,
     description: String,
     type: String,
-    reviewer: String,
     submited: {
         type: Boolean,
         default: false
     },
+    by: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "user"
+    },
+    from: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "user"
+    },
+    response: String,
     deadLine: String,
-})
+}, { timestamps: true, })
 
 const projectSchema = new mongoose.Schema({
     title: {
@@ -25,7 +33,7 @@ const projectSchema = new mongoose.Schema({
     status: {
         type: String,
         enum: {
-            values: ["cancelled", "inprogress", "completed", "active", "pending"],
+            values: ["cancelled", "rejected", "inprogress", "completed", "active", "pending"],
             message: "Status must be inprogress, active, completed or pending",
         },
         default: "pending",
@@ -44,6 +52,14 @@ const projectSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "user",
         default: null
+    },
+    acceptedBy: {
+        type: Array,
+        default: []
+    },
+    rejectedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "user"
     },
     progress: [stepSchema]
 },

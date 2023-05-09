@@ -242,27 +242,27 @@ input {
 }
 
 // ANT-D Selector
-.ant-select-single {
-    font-size: 14px !important;
-    width: 100% !important;
-}
+// .ant-select-single {
+//     font-size: 14px !important;
+//     width: 100% !important;
+// }
 
-.ant-select-selector {
-    width: 100% !important;
-    height: 42px !important;
-    padding: 5px 20px !important;
-    box-shadow: none !important;
-    border-radius: var(--radius);
-    border: 1px solid var(--border) !important;
+// .ant-select-selector {
+//     width: 100% !important;
+//     height: 42px !important;
+//     padding: 5px 20px !important;
+//     box-shadow: none !important;
+//     border-radius: var(--radius);
+//     border: 1px solid var(--border) !important;
 
-    &:hover {
-        border-color: var(--themeColorGreen) !important;
-    }
-}
+//     &:hover {
+//         border-color: var(--themeColorGreen) !important;
+//     }
+// }
 
-.ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
-    background-color: var(--lightYellow) !important;
-}
+// .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+//     background-color: var(--lightYellow) !important;
+// }
 
 // ANT-D Switch
 .ant-switch.ant-switch-checked {
