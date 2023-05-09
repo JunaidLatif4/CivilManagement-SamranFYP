@@ -28,7 +28,7 @@ const projectSchema = new mongoose.Schema({
             values: ["cancelled", "inprogress", "completed", "active", "pending"],
             message: "Status must be inprogress, active, completed or pending",
         },
-        default: "inprogress",
+        default: "pending",
         // default : false
     },
     client: {
