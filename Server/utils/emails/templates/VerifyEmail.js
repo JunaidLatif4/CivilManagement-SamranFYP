@@ -1,4 +1,4 @@
-const verifyEmail = (code)=>{
+const verifyEmail = (data) => {
     return `
     <!doctype html>
     <html lang="en">
@@ -38,10 +38,11 @@ const verifyEmail = (code)=>{
             }
         </style>
         <br />
-        <h1 class="text-theme text-center mb-5" style="color: #fd7e14; text-align: center; margin-bottom: 50px;"> Welcome to Institute Panel </h1>
+        <h1 class="text-theme text-center mb-5" style="color: #fd7e14; text-align: center; margin-bottom: 50px;"> Welcome to CIVIL-MANAGEMENT_SYSTEM </h1>
         <section class="text-center bg-theme" style="color: white; padding: 50px; background-color: rgb(4,44,0); text-align: center;">
-            <p style="color: white;">Enter the following code to verify your email</p> <br />
-            <button style="border: none; width: 200px; height: 40px; border-radius: 5px; margin: 10px;" class="code"> ${code} </button>
+            <p style="color: white;">Your Invited to <b> ${data?.title} </b> Project , BY ${data?.client?.firstName} ${data?.client?.lastName} </p> <br />
+            <p> Please Login to Verify Invitation </p> <br/>
+            <button style="border: none; width: 200px; height: 40px; border-radius: 5px; margin: 10px;" class="code"  onClick={() => window.open("https://civil-management.netlify.app/dashboard", "_blank")} > LOGIN </button>
         </section>
     </body>
     </html>

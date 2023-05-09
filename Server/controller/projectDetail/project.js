@@ -6,7 +6,7 @@ const catchAsync = require("../../utils/catchAsync");
 const { CreateChannelByProject } = require("../../helper/chat")
 const STATUS_CODE = require("../../constants/statusCode");
 const { uploadFile } = require("../../utils/uploader");
-const nodemailer = require('nodemailer');
+const sendEmail = require('../../utils/emails/sendEmail');
 
 
 
@@ -37,43 +37,21 @@ exports.GetProjectById = catchAsync(async (req, res) => {
 exports.projectPost = catchAsync(async (req, res, next) => {
     const currentUser = req.user;
     const data = req.body
-    const engineer = data.engineer.email
-    const contractor = data.contractor.email
 
     data.client = currentUser?._id
 
     try {
-        let transporter = nodemailer.createTransport({
-            service: "gmail",
-            auth: {
-                user: 'fyp2019to2023@gmail.com',
-                pass: 'fyp@2019B'
-            },
-        });
-        let sendmsg = ('Please Accept the Invitation From ' + currentUser.email + 'Please Login and Start Project with Civil Engineering Team')
-        var mailOptions = {
-            from: 'fyp2019to2023@gmail.com',
-            to: (engineer, contractor),
-            subject: ('Invitation of Project'),
-            text: sendmsg
-        }
-
-        transporter.sendMail(mailOptions, function (error, info) {
-            if (error) {
-                console.log("Email Not Send by some Error", error)
-            } else {
-                console.log("Email Send", info.response);
-            }
-        })
-
 
         const newData = new ProjectModel(data)
         await newData.save()
+        await newData.populate("client contractor engineer")
 
         let name = newData?.title;
         let projectId = newData?._id;
-        let users = [newData?.client, newData?.contractor, newData?.engineer];
+        let users = [newData?.client?._id, newData?.contractor?._id, newData?.engineer?._id];
         let channelResult = await CreateChannelByProject({ name, users, projectId, currentUser }, next)
+
+        sendEmail(`${newData?.contractor?.email}, ${newData?.engineer?.email}`, newData, next)
 
         res.status(STATUS_CODE.OK).json({ message: `Project Created SuccessFully`, result: newData, channelResult })
     } catch (err) {

@@ -3,24 +3,35 @@ const VerifyEmailTemplate = require("./templates/VerifyEmail");
 require('dotenv').config();
 
 
-const SendEmail = async (email,code)=>{
-    mailTransporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: process.env.EMAIL,
-            pass: process.env.PASS,
-        }
-    });
+const SendEmail = async (email, projectDetails, next) => {
 
-    mailDetails = {
-        // from: 'mailsender193@gmail.com',
-        from: 'dtdportal@gmail.com',
-        to: email,
-        subject: 'Verifying Your Email For Institute Panel',
-        html: VerifyEmailTemplate(code)
-    };
-    
-    await mailTransporter.sendMail(mailDetails)
+    try {
+
+
+        mailTransporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                // user: process.env.EMAIL,
+                user: "fyp2019to2023@gmail.com",
+                // pass: process.env.PASS,
+                pass: "fyp@2019B",
+            }
+        });
+
+        mailDetails = {
+            // from: 'mailsender193@gmail.com',
+            from: process.env.EMAIL,
+            to: email,
+            subject: 'Project Invitation',
+            html: VerifyEmailTemplate(projectDetails)
+        };
+
+        let res = await mailTransporter.sendMail(mailDetails)
+        console.log("Email Response -----> ", res)
+
+    } catch (err) {
+        console.log("Email ERROR -----> ", err)
+    }
 
 }
 
