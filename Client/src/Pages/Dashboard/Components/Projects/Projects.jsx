@@ -13,6 +13,7 @@ import AddNewProject from "./Component/AddProjectModal/NewProjectModal";
 import AllProject from "./Component/AllProjects/AllProjects";
 import ViewProjectPage from "./Component/ViewProject/ViewProjectPage";
 import ChatApp from "../ChatApp/index";
+import PDFPrint from "./Component/PDFPrint/Print";
 
 // API :
 import { GetAllProjectsAPI } from '../../../../API/project';
@@ -45,8 +46,12 @@ const Projects = () => {
                         <AllProject allProjects={allProjects} setAllProjects={setAllProjects} currentPage={currentPage} setCurrentPage={setCurrentPage} selectedProject={selectedProject} setSelectedProject={setSelectedProject} />
                         : currentPage == "chat" ?
                             <ChatApp openModal={currentPage == "chat" ? true : false} selectProject={selectedProject} closeModal={closeModel} />
-                            :
-                            <ViewProjectPage selectedProject={selectedProject} setCurrentPage={setCurrentPage} currentPage={currentPage} />
+                            : currentPage == "view" ?
+                                <ViewProjectPage selectedProject={selectedProject} setCurrentPage={setCurrentPage} currentPage={currentPage} />
+                                : currentPage == "print" ?
+                                    <PDFPrint selectedProject={selectedProject} setCurrentPage={setCurrentPage} />
+                                    :
+                                    null
                 }
             </div>
         </>

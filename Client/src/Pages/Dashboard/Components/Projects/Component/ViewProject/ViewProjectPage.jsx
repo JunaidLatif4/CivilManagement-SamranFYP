@@ -233,7 +233,10 @@ export default function ViewProjectPage({ selectedProject, setCurrentPage, curre
         </div>
         <div className="flexLineSpace">
           <div className="heading">Progress Details</div>
-          <Button style={{ width: "150px" }} className="EditPagebtn" onClick={() => setStepCreationModal(true)}>Add New Step</Button>
+          <div>
+            <Button style={{ width: "150px" }} className="EditPagebtn" onClick={() => setStepCreationModal(true)}>Add New Step</Button>
+            <Button style={{ width: "150px" }} className="EditPagebtn" onClick={() => setCurrentPage("print")}>Print</Button>
+          </div>
           <Modal title="Select Work Step" open={stepCreationModal} onOk={addNewStep} confirmLoading={btnloading} onCancel={closeModal}>
             <div className="flexColumn">
               <Select
@@ -404,7 +407,8 @@ export default function ViewProjectPage({ selectedProject, setCurrentPage, curre
           }
         </div>
         <div className="EditPageButtons">
-          <Button className="EditPagebtn Chatbtn" onClick={() => setCurrentPage("chat")}>Chat</Button>
+          <Button className="EditPagebtn Chatbtn" onClick={() => setCurrentPage("chat")}>CHAT</Button>
+          <Button className="EditPagebtn Chatbtn" onClick={() => setCurrentPage("chat")}>COMPLETE</Button>
         </div>
       </div>
     </>

@@ -16,7 +16,7 @@ const sendEmail = require('../../utils/emails/sendEmail');
 exports.projectGet = catchAsync(async (req, res) => {
     try {
         let currentUser = req.user;
-        const result = await ProjectModel.find({ [currentUser.role]: currentUser._id }).populate("client contractor engineer").populate({ path: "progress", select: "by from" });
+        const result = await ProjectModel.find({ [currentUser.role]: currentUser._id }).populate("client contractor engineer").populate({ path: "progress", populate: "by from" });
         res.status(STATUS_CODE.OK).json({ result, message: "Data Fatched Success Fully" })
     } catch (err) {
         res.status(STATUS_CODE.BAD_REQUEST).json({ statusCode: STATUS_CODE.SERVER_ERROR, err })

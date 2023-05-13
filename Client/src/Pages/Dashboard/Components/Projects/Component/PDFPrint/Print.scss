@@ -1,0 +1,170 @@
+@import url('https://rsms.me/inter/inter.css');
+
+.invoice-template_container {
+    position: relative;
+}
+
+.export_btn {
+    position: absolute;
+    right: -10px;
+    top: -10px;
+    z-index: 66;
+
+    .btn {
+        background-color: #26a69a;
+        border-radius: 50rem;
+        width: 60px;
+        height: 60px;
+        font-size: .6rem;
+        color: white;
+    }
+}
+
+.pdf-page {
+    position: relative;
+    margin: 0 auto;
+    padding: .4in .3in;
+    color: #333;
+    background-color: #fff;
+    box-shadow: 0 5px 10px 0 rgba(0, 0, 0, .3);
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+.pdf-header {
+    padding-bottom: .2in;
+    margin-bottom: .3in;
+    border-bottom: 1px solid #e5e5e5;
+    display: flex;
+    justify-content: space-between;
+}
+
+.invoice-number {
+    padding-top: .1in;
+    float: right;
+}
+
+.pdf-footer {
+    position: absolute;
+    bottom: .25in;
+    left: .3in;
+    right: .3in;
+    padding-top: 0.05in;
+    font-size: 0.9em;
+    text-align: center;
+    color: #787878;
+    font-size: .9rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    p {
+        border-top: 1px solid #e5e5e5;
+        padding-top: .2rem;
+    }
+
+    div {
+        display: flex;
+        width: -webkit-fil-available;
+        justify-content: end;
+        text-align: left;
+    }
+}
+
+.addresses {
+    font-size: 12px;
+}
+
+.addresses:after {
+    display: block;
+    content: "";
+    clear: both;
+}
+
+.for {
+    /* float: left; */
+}
+
+.for .f_data {
+    display: flex;
+    justify-content: space-between;
+
+}
+
+.from {
+    float: right;
+}
+
+.addresses p {
+    color: #787878;
+    padding: .05in 0;
+    /* border-top: 1px solid #e5e5e5; */
+}
+
+.addresses p:first-of-type {
+    border-top: 0;
+}
+
+.pdf-body {
+    margin-top: .3in;
+}
+
+.company-logo {
+    font-size: 1.8em;
+    font-weight: bold;
+    /* color: #3aabf0; */
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.company-logo img {
+    width: 40px;
+}
+
+.signature {
+    padding-top: .3in;
+}
+
+/* Dimensions other than px and em should be divided by 1.33 for the proper PDF output */
+.size-a4 {
+    width: 7.5in;
+    height: 8in;
+}
+
+.size-letter {
+    width: 6.3in;
+    height: 8.2in;
+}
+
+.size-executive {
+    width: 5.4in;
+    height: 7.8in;
+    font-size: 12px;
+}
+
+.size-executive .pdf-header {
+    margin-bottom: .1in;
+}
+
+.box {
+    padding: 1em;
+    background-color: rgba(20, 53, 80, 0.038);
+    border: 1px solid rgba(20, 53, 80, 0.05);
+}
+
+
+.template-table {
+    
+    .ant-table-cell{
+        font-size: .6rem;
+    }
+
+    .ant-table-thead {
+        .ant-table-cell {
+            font-size: .8rem;
+            background-color: var(--themeColor);
+            color: white;
+        }
+    }
+}
