@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 // Assets | ICONS :
 import { SiGoogleclassroom } from "react-icons/si";
@@ -14,44 +14,79 @@ import "./Cards.scss";
 
 
 
-let tempCardsData = [
-    {
-        icon: FiUsers,
-        static: 80,
-        value: 130,
-        name: "Clients"
-    },
-    {
-        icon: AiOutlineFileProtect,
-        static: -30,
-        value: 0.350,
-        name: "Total Projects"
-    },
-    {
-        icon: SiGoogleclassroom,
-        static: 40,
-        value: 4.720,
-        name: "Running Projects"
-    },
-    {
-        icon: FaGraduationCap,
-        static: 60,
-        value: 76,
-        name: "Contractors"
-    },
-]
-const Cards = () => {
+
+const Cards = ({ data }) => {
+
+    const [allCardsData, setAllCardsData] = useState([
+        {
+            icon: FiUsers,
+            // static: 80,
+            value: 0,
+            name: "Total Projects"
+        },
+        {
+            icon: AiOutlineFileProtect,
+            // static: -30,
+            value: 0,
+            name: "InProgress Projects"
+        },
+        {
+            icon: SiGoogleclassroom,
+            // static: 40,
+            value: 0,
+            name: "Completed Projects"
+        },
+        {
+            icon: FaGraduationCap,
+            // static: 60,
+            value: 0,
+            name: "Canceled Projects"
+        },
+    ])
+
+    useEffect(() => {
+        if (data) {
+            setAllCardsData([
+                {
+                    icon: FiUsers,
+                    // static: 80,
+                    value: data?.allProjets,
+                    name: "Total Projects"
+                },
+                {
+                    icon: AiOutlineFileProtect,
+                    // static: -30,
+                    value: data?.inprogress,
+                    name: "InProgress Projects"
+                },
+                {
+                    icon: SiGoogleclassroom,
+                    // static: 40,
+                    value: data?.completed,
+                    name: "Completed Projects"
+                },
+                {
+                    icon: FaGraduationCap,
+                    // static: 60,
+                    value: data?.canceled,
+                    name: "Canceled Projects"
+                },
+            ])
+        }
+    }, [data])
+
     return (
         <>
             <div className="cardsContainer">
                 {
-                    tempCardsData.map((data, index) => {
+                    allCardsData.map((data, index) => {
                         return (
                             <div className="hoverEffect" key={index}>
                                 <div className="card">
                                     <div className="bottomLine" />
                                     <div className="iconBox">
-                                        <data.icon className='icon' /> <div className="counts" style={data.static < 0 ? { backgroundColor: "red" } : {}}>{data.static}% {data.static < 0 ? <RiArrowDownSLine /> : <RiArrowUpSLine />}</div>
+                                        <data.icon className='icon' />
+                                        {data?.static && <div className="counts" style={data.static < 0 ? { backgroundColor: "red" } : {}}>{data.static}% {data.static < 0 ? <RiArrowDownSLine /> : <RiArrowUpSLine />}</div>}
                                     </div>
                                     <div className="detials">
                                         <div className="value">{data.value}</div>

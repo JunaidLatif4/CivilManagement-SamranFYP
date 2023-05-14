@@ -156,6 +156,56 @@ const ProjectStepResponseAPI = async (projectId, formData) => {
     }
     return resolved;
 }
+const CompleteProjectAPI = async (projectId, status) => {
+    let resolved = {
+        error: null,
+        data: null
+    }
+
+    try {
+        let res = await axios({
+            url: `/project/complete`,
+            method: "PATCH",
+            data: {
+                projectId,
+                status
+            },
+            headers: AuthTokenGen()
+        })
+        resolved.data = res.data
+    } catch (err) {
+        if (err && err.response && err?.response?.data?.message) {
+            resolved.error = err.response.data.message
+        } else {
+            resolved.error = "Something went Wrong"
+        }
+    }
+    return resolved;
+}
+
+const ProjectStaticsAPI = async (projectId, status) => {
+    let resolved = {
+        error: null,
+        data: null
+    }
+
+    try {
+        let res = await axios({
+            url: `/project/static`,
+            method: "GET",
+            headers: AuthTokenGen()
+        })
+        resolved.data = res.data
+    } catch (err) {
+        if (err && err.response && err?.response?.data?.message) {
+            resolved.error = err.response.data.message
+        } else {
+            resolved.error = "Something went Wrong"
+        }
+    }
+    return resolved;
+}
 
 
-export { GetAllProjectsAPI, CreatProjectAPI, CreatProjectStepAPI, GetProjectsAPI, ProjectInviteResponseAPI, ProjectStepResponseAPI };
+
+export { GetAllProjectsAPI, CreatProjectAPI, CreatProjectStepAPI, GetProjectsAPI, ProjectInviteResponseAPI, ProjectStepResponseAPI , CompleteProjectAPI , ProjectStaticsAPI };

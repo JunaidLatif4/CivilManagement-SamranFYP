@@ -35,7 +35,9 @@ const Projects = () => {
 
 
     const closeModel = () => {
-        setCurrentPage("details")
+        setCurrentPage("all")
+        setSelectedProject(null)
+
     }
 
     return (
@@ -47,7 +49,7 @@ const Projects = () => {
                         : currentPage == "chat" ?
                             <ChatApp openModal={currentPage == "chat" ? true : false} selectProject={selectedProject} closeModal={closeModel} />
                             : currentPage == "view" ?
-                                <ViewProjectPage selectedProject={selectedProject} setCurrentPage={setCurrentPage} currentPage={currentPage} />
+                                <ViewProjectPage selectedProject={selectedProject} setCurrentPage={setCurrentPage} currentPage={currentPage} closeViewPage={closeModel} />
                                 : currentPage == "print" ?
                                     <PDFPrint selectedProject={selectedProject} setCurrentPage={setCurrentPage} />
                                     :

@@ -47,21 +47,21 @@ const DonutChart = ({ title, data = Sample }) => {
                     <div className='status'>
                         <div className='dot' style={{ backgroundColor: `${data.datasets[0]["backgroundColor"][0]}` }} > </div>
                         <div className='dot_title'>
-                            Clients
+                            Canceled
                         </div>
                     </div>
                     <div className='status'>
                         <div className='dot' style={{ backgroundColor: `${data.datasets[0]["backgroundColor"][1]}` }}> </div>
                         <div className='dot_title'>
-                            Contractor
+                            Completed
                         </div>
                     </div>
-                    <div className='status'>
+                    {/* <div className='status'>
                         <div className='dot' style={{ backgroundColor: `${data.datasets[0]["backgroundColor"][2]}` }}> </div>
                         <div className='dot_title'>
                             Constructors
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </>

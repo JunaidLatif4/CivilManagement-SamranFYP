@@ -10,7 +10,7 @@ import { IoMdArrowRoundBack } from "react-icons/io"
 import { GrCloudUpload, GrCloudDownload } from "react-icons/gr"
 
 // APIs :
-import { CreatProjectStepAPI, GetProjectsAPI, ProjectStepResponseAPI } from "API/project";
+import { CreatProjectStepAPI, GetProjectsAPI, ProjectStepResponseAPI, CompleteProjectAPI } from "API/project";
 // Redux :
 import { useSelector } from "react-redux";
 // Data :
@@ -31,7 +31,7 @@ import { useEffect } from "react";
 
 
 const { TextArea } = Input;
-export default function ViewProjectPage({ selectedProject, setCurrentPage, currentPage }) {
+export default function ViewProjectPage({ selectedProject, setCurrentPage, currentPage, closeViewPage }) {
   let location = useLocation();
   let fileInput = useRef(null)
 
@@ -108,12 +108,7 @@ export default function ViewProjectPage({ selectedProject, setCurrentPage, curre
     fileInput.current.click()
   }
   const downloadFile = (fileUrl) => {
-    // setSubmitData({
-    //   stepId,
-    //   type: "document",
-    //   response: null
-    // })
-    // fileInput.current.click()
+    window.open(`${window.location?.customURL}/${fileUrl}` , "_blank")
   }
   const handleUploadingFile = (event) => {
     setSubmitData({
@@ -156,6 +151,21 @@ export default function ViewProjectPage({ selectedProject, setCurrentPage, curre
       response: null,
       type: null
     })
+  }
+
+
+  const closePage = () => {
+    closeModal()
+    closeViewPage()
+  }
+  const handelCompleteProject = async () => {
+    let res = await CompleteProjectAPI(selectedProjectData?._id, "completed")
+    if (res.error != null) {
+      toast.error(res.error)
+    } else {
+      toast.success(res.data.message)
+      closePage()
+    }
   }
 
 
@@ -408,7 +418,7 @@ export default function ViewProjectPage({ selectedProject, setCurrentPage, curre
         </div>
         <div className="EditPageButtons">
           <Button className="EditPagebtn Chatbtn" onClick={() => setCurrentPage("chat")}>CHAT</Button>
-          <Button className="EditPagebtn Chatbtn" onClick={() => setCurrentPage("chat")}>COMPLETE</Button>
+          <Button className="EditPagebtn Chatbtn" onClick={handelCompleteProject}>COMPLETE</Button>
         </div>
       </div>
     </>

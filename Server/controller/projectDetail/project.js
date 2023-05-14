@@ -147,3 +147,65 @@ exports.ProjectStepResponse = catchAsync(async (req, res, next) => {
 
 })
 
+exports.completeProject = catchAsync(async (req, res, next) => {
+    let { status, projectId } = req.body;
+    try {
+        const currentUser = req.user;
+        if (!currentUser?.role == "client") {
+            res.status(STATUS_CODE.FORBIDDEN).json({ message: "Not Authrized to perform this action." })
+            return
+        }
+
+        const projectData = await ProjectModel.findOne({ _id: projectId, client: currentUser?._id })
+        if (!projectData) {
+            res.status(STATUS_CODE.NOT_FOUND).json({ message: "Project Not Found" })
+            return
+        }
+
+        projectData.status = status;
+        await projectData.save()
+
+        res.status(STATUS_CODE.OK).json({ message: "Project Mark as Completed", result: projectData })
+
+    } catch (err) {
+        res.status(STATUS_CODE.SERVER_ERROR).json({ statusCode: STATUS_CODE.SERVER_ERROR, err })
+    }
+})
+
+exports.projectStatics = catchAsync(async (req, res, next) => {
+    try {
+        let currentUser = req.user;
+
+        const AllProjectsData = await ProjectModel.find({ [currentUser?.role]: currentUser?._id })
+        if (!AllProjectsData?.length >= 1) {
+            res.status(STATUS_CODE.OK).json({
+                message: "Operation Successful",
+                result: {
+                    allProjets: 0,
+                    inprogress: 0,
+                    completed: 0,
+                    canceled: 0
+                }
+            })
+            return
+        }
+
+        const completedProjects = AllProjectsData.filter(val => val.status == "completed")
+        const inProgressProjects = AllProjectsData.filter(val => val.status == "inprogress")
+        const canceledProjects = AllProjectsData.filter(val => val.status == "cancelled")
+
+        res.status(STATUS_CODE.OK).json({
+            message: "Operation Successful",
+            result: {
+                allProjets: AllProjectsData?.length || 0,
+                inprogress: inProgressProjects?.length || 0,
+                completed: completedProjects?.length || 0,
+                canceled: canceledProjects?.length || 0
+            }
+        })
+
+    } catch (err) {
+        console.log(err);
+        res.status(STATUS_CODE.SERVER_ERROR).json({ statusCode: STATUS_CODE.SERVER_ERROR, err })
+    }
+})
